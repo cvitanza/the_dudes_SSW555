@@ -1,25 +1,32 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import BottomNav from './components/BottomNav';
+import Home from './components/Home';
+import Explore from './components/Explore';
+import Upload from './components/Upload';
+import History from './components/History';
+import Profile from './components/Profile';
 import React from 'react';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+
+        {/* Define the routes here */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/explore" element={<Explore/>} />
+          <Route path="/upload" element={<Upload/>} />
+          <Route path="/History" element={<History/>} />
+          <Route path="/profile" element={<Profile/>} />
+        </Routes>
+
+        {/* Fixed bottom navigation bar */}
+        <BottomNav />
+
+      </div>
+    </Router>
   );
 }
 
