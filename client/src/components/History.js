@@ -1,10 +1,10 @@
 import React from 'react';
+import Header from './Header';
 
 function History() {
   return (
     <div>
-      <h1>History Page</h1>
-      <p>This is the history page.</p>
+      <Header title="My Meal History" />
     </div>
   );
 }

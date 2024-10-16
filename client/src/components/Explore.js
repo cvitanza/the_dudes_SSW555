@@ -1,10 +1,10 @@
 import React from 'react';
+import Header from './Header';
 
 function Explore() {
   return (
     <div>
-      <h1>Explore</h1>
-      <p>This is the explore page.</p>
+      <Header title="Explore Recipes" />
     </div>
   );
 }

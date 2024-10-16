@@ -1,0 +1,44 @@
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
+  padding: 10px;
+  padding-bottom: 60px; /* Padding to account for the bottom navbar */
+  box-sizing: border-box;
+}
+
+.upload-button {
+  width: 95%;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  flex-grow: 1; /* Makes the buttons grow to fill vertical space */
+  margin: 10px 0; /* Adds spacing between the buttons */
+}
+
+.upload-button:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.upload-button:active {
+  background-color: #e0e0e0;
+}
+
+.upload-button + .upload-button {
+  margin-top: 10px;
+}

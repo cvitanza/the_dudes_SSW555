@@ -1,10 +1,10 @@
 import React from 'react';
+import Header from './Header';
 
 function Profile() {
   return (
     <div>
-      <h1>Profile Page</h1>
-      <p>This is the profile page.</p>
+      <Header title="My Profile" />
     </div>
   );
 }
