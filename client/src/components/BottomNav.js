@@ -2,9 +2,9 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './styles/BottomNav.css'; // import styles
 import HomeIcon from '@mui/icons-material/Home';
-import ExploreIcon from '@mui/icons-material/Explore';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import HistoryIcon from '@mui/icons-material/History';
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 
 function BottomNav() {
@@ -18,9 +18,9 @@ function BottomNav() {
             <HomeIcon />
           </Link>
         </li>
-        <li className={location.pathname === '/explore' ? 'active' : ''}>
-          <Link to="/explore">
-            <ExploreIcon />
+        <li className={location.pathname === '/recipes' ? 'active' : ''}>
+          <Link to="/recipes">
+            <RestaurantMenuIcon/>
           </Link>
         </li>
         <li className={location.pathname === '/upload' ? 'active' : ''}>
@@ -28,9 +28,9 @@ function BottomNav() {
             <CameraAltIcon />
           </Link>
         </li>
-        <li className={location.pathname === '/history' ? 'active' : ''}>
-          <Link to="/history">
-            <HistoryIcon />
+        <li className={location.pathname === '/favorites' ? 'active' : ''}>
+          <Link to="/favorites">
+            <BookmarkIcon />
           </Link>
         </li>
         <li className={location.pathname === '/profile' ? 'active' : ''}>
