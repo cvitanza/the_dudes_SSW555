@@ -3,7 +3,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #ffffff;
+  background-color: #35c655;
   border-top: 1px solid #ccc;
   display: flex;
   justify-content: space-around;
@@ -26,6 +26,6 @@
 
 .bottom-nav a {
   text-decoration: none;
-  color: #333;
+  color: #ffffff;
   font-size: 20px;
 }

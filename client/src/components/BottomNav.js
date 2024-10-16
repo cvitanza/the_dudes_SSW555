@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './BottomNav.css'; // import styles
 import HomeIcon from '@mui/icons-material/Home';
-import ExploreIcon from '@mui/icons-material/Explore';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import HistoryIcon from '@mui/icons-material/History';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 
 function BottomNav() {
@@ -17,8 +17,8 @@ function BottomNav() {
           </Link>
         </li>
         <li>
-          <Link to="/explore">
-            <ExploreIcon />
+          <Link to="/recipes">
+            <RestaurantMenuIcon />
           </Link>
         </li>
         <li>
@@ -27,8 +27,8 @@ function BottomNav() {
           </Link>
         </li>
         <li>
-          <Link to="/history">
-            <HistoryIcon />
+          <Link to="/favorites">
+            <BookmarkIcon />
           </Link>
         </li>
         <li>
