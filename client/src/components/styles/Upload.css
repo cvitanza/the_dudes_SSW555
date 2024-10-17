@@ -11,7 +11,7 @@
   align-items: center;
   flex-grow: 1;
   padding: 10px;
-  padding-bottom: 60px; /* Padding to account for the bottom navbar */
+  padding-bottom: 70px; /* Padding to account for the bottom navbar */
   box-sizing: border-box;
 }
 
