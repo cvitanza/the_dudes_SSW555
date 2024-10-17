@@ -14,27 +14,27 @@ function BottomNav() {
     <nav className="bottom-nav">
       <ul>
         <li className={location.pathname === '/' ? 'active' : ''}>
-          <Link to="/">
+          <Link to="/" aria-label="Home">
             <HomeIcon />
           </Link>
         </li>
         <li className={location.pathname === '/explore' ? 'active' : ''}>
-          <Link to="/explore">
+          <Link to="/explore" aria-label="Explore">
             <ExploreIcon />
           </Link>
         </li>
         <li className={location.pathname === '/upload' ? 'active' : ''}>
-          <Link to="/upload">
+          <Link to="/upload" aria-label="Upload">
             <CameraAltIcon />
           </Link>
         </li>
         <li className={location.pathname === '/history' ? 'active' : ''}>
-          <Link to="/history">
+          <Link to="/history" aria-label="History">
             <HistoryIcon />
           </Link>
         </li>
         <li className={location.pathname === '/profile' ? 'active' : ''}>
-          <Link to="/profile">
+          <Link to="/profile" aria-label="Profile">
             <ProfileIcon />
           </Link>
         </li>
