@@ -2,13 +2,13 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './styles/BottomNav.css'; // import styles
 import HomeIcon from '@mui/icons-material/Home';
-import ExploreIcon from '@mui/icons-material/Explore';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import HistoryIcon from '@mui/icons-material/History';
+import RecipesIcon from '@mui/icons-material/RestaurantMenu';
+import UploadIcon from '@mui/icons-material/CameraAlt';
+import FavoritesIcon from '@mui/icons-material/Bookmark'
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 
 function BottomNav() {
-  const location = useLocation(); // Get current location (active route)
+  const location = useLocation(); 
 
   return (
     <nav className="bottom-nav">
@@ -18,19 +18,19 @@ function BottomNav() {
             <HomeIcon />
           </Link>
         </li>
-        <li className={location.pathname === '/explore' ? 'active' : ''}>
-          <Link to="/explore" aria-label="Explore">
-            <ExploreIcon />
+        <li className={location.pathname === '/recipes' ? 'active' : ''}>
+          <Link to="/recipes" aria-label="Recipes">
+            <RecipesIcon />
           </Link>
         </li>
         <li className={location.pathname === '/upload' ? 'active' : ''}>
           <Link to="/upload" aria-label="Upload">
-            <CameraAltIcon />
+            <UploadIcon />
           </Link>
         </li>
-        <li className={location.pathname === '/history' ? 'active' : ''}>
-          <Link to="/history" aria-label="History">
-            <HistoryIcon />
+        <li className={location.pathname === '/favorites' ? 'active' : ''}>
+          <Link to="/favorites" aria-label="Favorites">
+            <FavoritesIcon />
           </Link>
         </li>
         <li className={location.pathname === '/profile' ? 'active' : ''}>

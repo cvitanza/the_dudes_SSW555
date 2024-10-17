@@ -24,14 +24,14 @@ describe('BottomNav Component', () => {
       expect(homeButton).toBeInTheDocument();
     });
   
-    test('navigates to Explore when ExploreIcon is clicked', () => {
+    test('navigates to Recipes when RecipesIcon is clicked', () => {
       render(
-        <MemoryRouter initialEntries={['/explore']}>
+        <MemoryRouter initialEntries={['/recipes']}>
           <BottomNav />
         </MemoryRouter>
       );
   
-      const recipesButton = screen.getByRole('link', { name: /explore/i });
+      const recipesButton = screen.getByRole('link', { name: /recipes/i });
       fireEvent.click(recipesButton);
   
       expect(recipesButton).toBeInTheDocument();
@@ -50,14 +50,14 @@ describe('BottomNav Component', () => {
       expect(uploadButton).toBeInTheDocument();
     });
   
-    test('navigates to History when HistoryIcon is clicked', () => {
+    test('navigates to Favorites when FavoritesIcon is clicked', () => {
       render(
-        <MemoryRouter initialEntries={['/history']}>
+        <MemoryRouter initialEntries={['/favorites']}>
           <BottomNav />
         </MemoryRouter>
       );
   
-      const favoritesButton = screen.getByRole('link', { name: /history/i });
+      const favoritesButton = screen.getByRole('link', { name: /favorites/i });
       fireEvent.click(favoritesButton);
   
       expect(favoritesButton).toBeInTheDocument();

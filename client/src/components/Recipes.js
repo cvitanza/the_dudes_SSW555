@@ -1,12 +1,12 @@
 import React from 'react';
 import Header from './Header';
 
-function History() {
+function Recipes() {
   return (
     <div>
-      <Header title="My Meal History" />
+      <Header title="Explore Recipes" />
     </div>
   );
 }
 
-export default History;
+export default Recipes;

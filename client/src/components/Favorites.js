@@ -1,12 +1,12 @@
 import React from 'react';
 import Header from './Header';
 
-function Explore() {
+function Favorites() {
   return (
     <div>
-      <Header title="Explore Recipes" />
+      <Header title="My Meal Favorites" />
     </div>
   );
 }
 
-export default Explore;
+export default Favorites;
