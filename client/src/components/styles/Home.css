@@ -1,0 +1,73 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
+  padding: 10px;
+  padding-bottom: 70px; /* Padding to account for the bottom navbar */
+  box-sizing: border-box;
+}
+
+.upload-shortcut {
+  width: 100%;
+  background-color: #999;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 5px; /* Reduce padding */
+  font-size: 24px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  margin: 10px 0;
+  margin-top: 10px;
+  height: 75px; 
+  line-height: 50px; 
+  flex-grow: 0; 
+}
+
+.upload-shortcut:hover {
+  background-color: #888;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.upload-shortcut:active {
+  background-color: #e0e0e0;
+}
+
+.info {
+  width: 95%;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  flex-grow: 1; /* Makes the buttons grow to fill vertical space */
+  margin: 10px 0; /* Adds spacing between the buttons */
+  margin-top: 10px;
+}
+
+.nutrition-info {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to the next line if there's not enough space */
+  justify-content: center; /* Center items in the container */
+  gap: 10px; /* Add some space between items */
+  text-align: center; /* Center the text within each item */
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+.meal-image {
+  max-width: 100%; /* Ensures the image does not exceed the width of its container */
+  max-height: 200px; /* Set a maximum height to limit overflow */
+  object-fit: contain; /* Ensures the image scales proportionally without distortion */
+}
