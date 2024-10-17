@@ -1,8 +1,8 @@
-// routes/userRoutes.js
 import express from 'express';
 import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import protect from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -17,8 +17,17 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Create a new user
-    const user = new User({ name, email, password });
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user with the hashed password
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
     await user.save();
 
     // Generate JWT token
@@ -40,18 +49,21 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Find user by email
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: 'Invalid credentials' });
     }
 
-    const isMatch = await user.matchPassword(password);
+    // Check if the password matches the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({
@@ -65,9 +77,12 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Get user data (protected route)
-router.get('/profile', (req, res) => {
-  res.send('User profile data');
+// Get user profile (protected route)
+router.get('/profile', protect, (req, res) => {
+  res.json({
+    id: req.user.id,
+    message: 'User profile data',
+  });
 });
 
 export default router;
