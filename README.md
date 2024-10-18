@@ -1,5 +1,6 @@
 # the_dudes_SSW555
 Github Repo for SSW-555 project. Group 20 -- the dudes
+Team Members: Cory Vitanza, Lucas Hope, Steven DeFalco, Xavier Carty, and Gleb Myshkin
 
 ### Diet Analyzer
 
@@ -23,6 +24,8 @@ Our group, **Group 20**, has selected option 2 for our project: the **Diet Analy
 
 The project uses [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) and Jest for unit testing. 
 
+Postman is used for API Testing.
+
 ### BottomNav Component Tests
 
 The `BottomNav` component's tests verify that clicking on each icon navigates to the correct page.
@@ -37,6 +40,16 @@ To run the tests, use the following command:
 
 npm test
 
+### Technology Used
+
+Database uses MongoDB
+
+Cloud Service is Cloudinary
+
+### Sprints
+Sprint 1: Focus on creating UI/UX for home & menu screens. Make user experience bettwe by cleaning up the navigation system.
+
+Sprint 2 (future): We will work on setting up a recipe database, create backend API, and integrate multiple APIs while testing and deploying website. Look into creating a login function with its own database.
 
 ### Styling
 ```markdown
