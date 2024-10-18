@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js'
+import cors from 'cors';
 
 dotenv.config();
 
@@ -12,6 +13,8 @@ app.use(express.json()); // Body parser for JSON requests
 
 // Connect to MongoDB
 connectDB();
+
+app.use(cors());
 
 // User routes
 app.use('/api/users', userRoutes);

@@ -13,18 +13,18 @@ function Upload() {
     formData.append('image', file); // Append the image file
 
     try {
-      setLoading(true); // Start loading state
-      const response = await axios.post('/api/upload', formData, {
+      setLoading(true);
+      const response = await axios.post('http://localhost:5000/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       console.log('Uploaded to Cloudinary:', response.data.url);
-      setImageUrl(response.data.url); // Save the uploaded image URL
-      setLoading(false); // Stop loading state
+      setImageUrl(response.data.url); 
+      setLoading(false);
     } catch (error) {
       console.error('Error uploading to Cloudinary:', error);
-      setLoading(false); // Stop loading state in case of error
+      setLoading(false);
     }
   };
 

@@ -19,7 +19,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // POST route to handle image uploads
-router.post('/upload', upload.single('image'), async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
   try {
     const fileStr = `data:image/jpeg;base64,${req.file.buffer.toString('base64')}`;
     const uploadResponse = await cloudinary.uploader.upload(fileStr);
