@@ -1,73 +1,112 @@
+/* General Styling */
+body {
+  font-family: 'Inter', sans-serif; /* Modern sans-serif font */
+  background-color: #f9f9f9; /* Light background for contrast */
+  margin: 0;
+  padding: 0;
+}
+
 .home-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100vh; /* Full viewport height */
+  width: 100vw;
+  background-color: #c3c4c4; /* Slightly off-white background */
 }
 
 .content-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   flex-grow: 1;
-  padding: 10px;
-  padding-bottom: 70px; /* Padding to account for the bottom navbar */
+  padding: 0 4vw;
+  padding-bottom: 9vh; /* Account for bottom navbar */
+  padding-top: 9vh; /* Account for Header */
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
+/* Upload Button Styling */
 .upload-shortcut {
-  width: 100%;
-  background-color: #999;
-  border: 2px solid #ccc;
-  border-radius: 12px;
-  padding: 5px; /* Reduce padding */
-  font-size: 24px;
+  width: 92vw;
+  background-color: #4CAF50; /* Modern green button */
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 18px;
+  color: white; /* Text color for contrast */
+  font-weight: 600;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40); /* Modern shadow */
   cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  margin: 10px 0;
-  margin-top: 10px;
-  height: 75px; 
-  line-height: 50px; 
-  flex-grow: 0; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  margin-bottom: 2vw;
 }
 
 .upload-shortcut:hover {
-  background-color: #888;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: #45a049; /* Darker green on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Stronger shadow on hover */
+  transform: scale(1.015); /* Slightly enlarge the card */
 }
 
 .upload-shortcut:active {
-  background-color: #e0e0e0;
+  background-color: #39943b; /* Even darker on active */
 }
 
+/* Info Cards Styling */
 .info {
-  width: 95%;
+  width: 92vw;
   background-color: white;
-  border: 2px solid #ccc;
+  border: none; /* No borders for a clean look */
   border-radius: 12px;
-  padding: 20px;
+  padding: 10px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  flex-grow: 1; /* Makes the buttons grow to fill vertical space */
-  margin: 10px 0; /* Adds spacing between the buttons */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Modern shadow */
+  margin-bottom: 2vw;
+  flex-grow: 1; /* Expands to fill space */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* Hover Effect */
+.info:hover {
+  transform: scale(1.015); /* Slightly enlarge the card */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+  background-color: #f0f8ff; /* Optional: Slight background color change */
+}
+
+/* Image Styling */
+.meal-image {
+  max-width: 50vh; /* Fully responsive */
+  max-height: 50vh; /* Limit height based on viewport */
+  object-fit: cover; /* Scale and crop */
+  border-radius: 8px; /* Rounded corners */
+}
+
+/* Nutrition Info Styling */
+.nutrition-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333; /* Darker text for contrast */
   margin-top: 10px;
 }
 
-.nutrition-info {
-  display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to the next line if there's not enough space */
-  justify-content: center; /* Center items in the container */
-  gap: 10px; /* Add some space between items */
-  text-align: center; /* Center the text within each item */
-  font-size: 16px; /* Adjust font size as needed */
+/* Headings */
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  color: #222; /* Dark gray for heading */
 }
 
-.meal-image {
-  max-width: 100%; /* Ensures the image does not exceed the width of its container */
-  max-height: 200px; /* Set a maximum height to limit overflow */
-  object-fit: contain; /* Ensures the image scales proportionally without distortion */
+/* General Text Styling */
+span, p {
+  font-size: 16px;
+  color: #555; /* Medium gray for general text */
 }
