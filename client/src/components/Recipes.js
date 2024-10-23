@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import { RecipesContext } from '../context/RecipesContext';
 
 function Recipes() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [recipes, setRecipes] = useState([]);
+  const { recipes, setRecipes } = useContext(RecipesContext); // Use Context
   const [loading, setLoading] = useState(false);
 
   const handleSearchChange = (e) => {
@@ -13,7 +14,7 @@ function Recipes() {
 
   const fetchRecipes = async () => {
     if (searchTerm.trim() === '') {
-      return; // Don't search if the search term is empty
+      return;
     }
 
     setLoading(true);
@@ -24,9 +25,8 @@ function Recipes() {
         `https://api.edamam.com/api/recipes/v2?type=public&q=${searchTerm}&app_id=${appId}&app_key=${appKey}`
       );
       const data = await response.json();
-
       const topRecipes = data.hits.slice(0, 10);
-      setRecipes(topRecipes);
+      setRecipes(topRecipes); // Set recipes in context
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
@@ -35,6 +35,12 @@ function Recipes() {
 
   const handleSearchClick = () => {
     fetchRecipes();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      fetchRecipes(); // Trigger search when Enter is pressed
+    }
   };
 
   return (
@@ -47,6 +53,7 @@ function Recipes() {
           placeholder="Search recipes..."
           value={searchTerm}
           onChange={handleSearchChange}
+          onKeyDown={handleKeyDown} // Listen for Enter key press
           style={{
             flex: '1',
             padding: '10px',
@@ -80,7 +87,7 @@ function Recipes() {
               <li key={index} style={{ padding: '10px 0', fontSize: '18px' }}>
                 <Link
                   to={`/recipe/${encodeURIComponent(recipe.recipe.uri)}`}
-                  state={{ recipe: recipe.recipe }} // Pass the entire recipe object
+                  state={{ recipe: recipe.recipe }}
                   style={{ textDecoration: 'none', color: '#007BFF' }}
                 >
                   {recipe.recipe.label}
