@@ -3,31 +3,32 @@ import BottomNav from './components/BottomNav';
 import Home from './components/Home';
 import Upload from './components/Upload';
 import Profile from './components/Profile';
-import React from 'react';
-import './App.css';
 import Favorites from './components/Favorites';
 import Recipes from './components/Recipes';
+import RecipeDetail from './components/RecipeDetail';
+import { RecipesProvider } from './context/RecipesContext'; 
+import React from 'react';
+import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-
-        {/* Define the routes here */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/recipes" element={<Recipes/>} />
-          <Route path="/upload" element={<Upload/>} />
-          <Route path="/favorites" element={<Favorites/>} />
-          <Route path="/profile" element={<Profile/>} />
-        </Routes>
-
-        {/* Fixed bottom navigation bar */}
-        <BottomNav />
-
-      </div>
-    </Router>
+    <RecipesProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/recipes" element={<Recipes />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+          <BottomNav />
+        </div>
+      </Router>
+    </RecipesProvider>
   );
 }
 
 export default App;
+
