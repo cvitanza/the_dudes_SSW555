@@ -72,7 +72,6 @@ body {
 .info:hover {
   transform: scale(1.015); /* Slightly enlarge the card */
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* More prominent shadow */
-  background-color: #f0f8ff; /* Optional: Slight background color change */
 }
 
 /* Image Styling */
