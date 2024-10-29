@@ -1,0 +1,60 @@
+/* Centering the signup page */
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+  }
+  
+  /* Container styling for signup */
+  .signup-container {
+    background-color: white;
+    padding: 40px; /* Add padding around the form */
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    width: 320px; /* Adjust width for better spacing */
+  }
+  
+  /* Special styling for the Sign Up title */
+  .signup-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Input field styling for signup */
+  .signup-input {
+    margin-bottom: 20px;
+    padding: 12px; /* Increase padding */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: calc(100% - 24px); /* Add space inside the container */
+    box-sizing: border-box;
+  }
+  
+  .signup-input:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Button styling for signup */
+  .signup-button {
+    padding: 12px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .signup-button:hover {
+    background-color: #0056b3;
+  }
