@@ -47,7 +47,7 @@ function Recipes() {
     <div>
       <Header title="Explore Recipes" />
       
-      <div style={{ padding: '20px', display: 'flex', gap: '10px' }}>
+      <div style={{ padding: '10vh 20px', display: 'flex', gap: '10px' }}>
         <input
           type="text"
           placeholder="Search recipes..."
