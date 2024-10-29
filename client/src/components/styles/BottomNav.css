@@ -8,6 +8,7 @@
   justify-content: space-around;
   padding: 0; /* Remove padding */
   margin: 0; /* Remove any margin */
+  height: 8vh;
 }
 
 .bottom-nav ul {
@@ -33,7 +34,7 @@
 }
 
 .bottom-nav li.active a {
-  background-color: #e0f7fa; /* Light blue for active button */
+  background-color: rgba(141, 141, 141, 0.7); /* Pale light blue with 80% opacity */
   border-radius: 0; /* Remove border-radius */
   height: 100%; /* Extend to full height */
 }
@@ -43,7 +44,7 @@
 }
 
 .bottom-nav li.active a:hover {
-  background-color: #e0f7fa; /* Keep blue when hovered if active */
+  background-color: rgba(107, 106, 106, 0.7); /* Pale light blue with 80% opacity */
 }
 
 .bottom-nav li a:active {

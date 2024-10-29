@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100vw;
+  background-color: #c3c4c4; /* Slightly off-white background */
 }
 
 .button-container {
@@ -10,13 +12,13 @@
   justify-content: space-around;
   align-items: center;
   flex-grow: 1;
-  padding: 10px;
-  padding-bottom: 70px; /* Padding to account for the bottom navbar */
+  padding: 0 2vw;
+  margin: 9vh 0;
   box-sizing: border-box;
 }
 
 .upload-button {
-  width: 95%;
+  width: 100%;
   background-color: white;
   border: 2px solid #ccc;
   border-radius: 12px;
@@ -25,20 +27,17 @@
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
   flex-grow: 1; /* Makes the buttons grow to fill vertical space */
-  margin: 10px 0; /* Adds spacing between the buttons */
+  margin: 1vw 0; /* Adds spacing between the buttons */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .upload-button:hover {
   background-color: #f0f0f0;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.015); /* Slightly enlarge the card */
 }
 
 .upload-button:active {
   background-color: #e0e0e0;
-}
-
-.upload-button + .upload-button {
-  margin-top: 10px;
 }
