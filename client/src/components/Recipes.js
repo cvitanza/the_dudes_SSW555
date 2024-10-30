@@ -19,8 +19,8 @@ function Recipes() {
 
     setLoading(true);
     try {
-      const appId = '82ccafe2';
-      const appKey = 'e56201c68f9f6dc852d51840340d490c';
+      const appId = process.env.REACT_APP_API_ID;
+      const appKey = process.env.REACT_APP_API_KEY;
       const response = await fetch(
         `https://api.edamam.com/api/recipes/v2?type=public&q=${searchTerm}&app_id=${appId}&app_key=${appKey}`
       );
@@ -47,7 +47,7 @@ function Recipes() {
     <div>
       <Header title="Explore Recipes" />
       
-      <div style={{ padding: '10vh 20px', display: 'flex', gap: '10px' }}>
+      <div style={{ padding: '0px 20px', paddingTop: '10vh', display: 'flex', gap: '10px' }}>
         <input
           type="text"
           placeholder="Search recipes..."
@@ -80,7 +80,7 @@ function Recipes() {
 
       {loading && <p>Loading...</p>}
 
-      <div style={{ padding: '20px', paddingBottom: '60px' }}> {/* Added paddingBottom for space below */}
+      <div style={{ padding: '0px 20px', paddingBottom: '10vh' }}> {/* Added paddingBottom for space below */}
         {recipes.length > 0 ? (
           <ul style={{ listStyleType: 'none', paddingLeft: 0 }}> {/* Remove bullet points */}
             {recipes.map((recipe, index) => (

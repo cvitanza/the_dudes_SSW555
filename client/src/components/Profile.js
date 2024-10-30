@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import Signout from './Signout';
 import axios from 'axios';
+import './styles/Profile.css';
 
 function Profile({ setIsAuthenticated }) {
   const [userData, setUserData] = useState(null);
@@ -21,7 +22,8 @@ function Profile({ setIsAuthenticated }) {
         }
 
         // Make API call to the profile endpoint with Authorization header
-        const response = await axios.get('http://localhost:5000/api/auth/profile', {
+        const port = process.env.REACT_APP_PORT || 5000;
+        const response = await axios.get(`http://localhost:${port}/api/auth/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -51,23 +53,26 @@ function Profile({ setIsAuthenticated }) {
   return (
     <div>
       <Header title="My Profile" />
+      
+      <div className='profile-container'>
+        
+        {/* Loading state */}
+        {loading && <p>Loading profile data...</p>}
 
-      {/* Loading state */}
-      {loading && <p>Loading profile data...</p>}
+        {/* Display error message if fetching profile fails */}
+        {error && <p>{error}</p>}
 
-      {/* Display error message if fetching profile fails */}
-      {error && <p>{error}</p>}
+        {/* Render profile info if available */}
+        {userData && !loading && !error ? (
+          <div>
+            <h2>Welcome, {`${userData.firstName} ${userData.lastName}`}</h2>
+            <p>{userData.message}</p>
+          </div>
+        ) : null}
 
-      {/* Render profile info if available */}
-      {userData && !loading && !error ? (
-        <div>
-          <h2>Welcome, {`${userData.firstName} ${userData.lastName}`}</h2>
-          <p>{userData.message}</p>
-        </div>
-      ) : null}
-
-      {/* Render the Signout button and pass setIsAuthenticated */}
-      <Signout setIsAuthenticated={setIsAuthenticated} />
+        {/* Render the Signout button and pass setIsAuthenticated */}
+        <Signout setIsAuthenticated={setIsAuthenticated} />
+      </div>
     </div>
   );
 }

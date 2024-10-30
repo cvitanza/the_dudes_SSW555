@@ -23,7 +23,8 @@ const Signup = ({ setIsAuthenticated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', formData);
+      const port = process.env.REACT_APP_PORT || 5000;
+      const response = await axios.post(`http://localhost:${port}/api/auth/signup`, formData);
       
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);

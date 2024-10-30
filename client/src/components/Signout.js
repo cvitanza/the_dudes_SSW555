@@ -16,8 +16,9 @@ const Signout = ({ setIsAuthenticated }) => { // Destructure setIsAuthenticated 
       }
 
       // Send request to backend to invalidate the token with Authorization header
+      const port = process.env.REACT_APP_PORT || 5000;
       await axios.post(
-        'http://localhost:5000/api/auth/signout',
+        `http://localhost:${port}/api/auth/signout`,
         {}, // Pass an empty body if not sending any additional data
         {
           headers: {

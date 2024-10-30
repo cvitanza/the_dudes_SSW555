@@ -3,4 +3,7 @@ server/node_modules
 client/node_modules
 # Ignore environment variables
 server/.env
+client/.env
+
 node_modules
+.DS_Store
