@@ -14,6 +14,7 @@ router.get('/profile', protect, (req, res) => {
       id: req.user.id,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
+      email: req.user.email,
       message: 'This is your profile page ',
     });
   });
