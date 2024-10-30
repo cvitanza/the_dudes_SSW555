@@ -55,10 +55,25 @@ function Home() {
           <h2>My Last Meal</h2>
           <img src={lastMeal.imageUrl} alt="Last Meal" className="meal-image" />
           <div className="nutrition-info">
-            <span>Calories: {lastMeal.nutritionInfo.calories}</span>
-            <span>Protein: {lastMeal.nutritionInfo.protein}g</span>
-            <span>Fat: {lastMeal.nutritionInfo.fat}g</span>
-            <span>Carbs: {lastMeal.nutritionInfo.carbs}g</span>
+            <h3>Nutritional Information</h3>
+            <div className="nutrition-row">
+              <div className="nutrition-item">
+                <span className="label">Calories:</span>
+                <span className="value">{lastMeal.nutritionInfo.calories} kcal</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Protein:</span>
+                <span className="value">{lastMeal.nutritionInfo.protein}g</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Carbohydrates:</span>
+                <span className="value">{lastMeal.nutritionInfo.carbs}g</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Fat:</span>
+                <span className="value">{lastMeal.nutritionInfo.fat}g</span>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -19,15 +19,13 @@ body {
   justify-content: flex-start;
   align-items: center;
   flex-grow: 1;
-  padding: 0 4vw;
-  padding-bottom: 9vh; 
-  padding-top: 9vh;
+  padding: 10vh 4vw;
   box-sizing: border-box;
   overflow-y: auto;
 }
 
 .upload-shortcut {
-  width: 92vw;
+  width: 100%;
   background-color: #4CAF50;
   border: none;
   border-radius: 8px;
@@ -39,7 +37,7 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-  margin-bottom: 2vw;
+  margin-bottom: 3vw;
 }
 
 .upload-shortcut:hover {
@@ -53,11 +51,10 @@ body {
 }
 
 .info {
-  width: 92vw;
+  width: 100%;
   background-color: white;
   border: none; 
   border-radius: 12px;
-  padding: 10px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   margin-bottom: 2vw;
@@ -71,22 +68,38 @@ body {
 }
 
 .meal-image {
-  max-width: 50vh;
+  max-width: 50vw;
   max-height: 50vh;
   object-fit: cover;
   border-radius: 8px;
 }
 
 .nutrition-info {
+  text-align: left;
+  margin-top: 15px;
+  padding: 0 4vw;
+}
+
+.nutrition-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.nutrition-item {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333; 
-  margin-top: 10px;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.label {
+  font-weight: bold;
+  color: #666;
+}
+
+.value {
+  color: #333;
 }
 
 h2 {
