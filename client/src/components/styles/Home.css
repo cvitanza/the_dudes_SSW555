@@ -1,7 +1,6 @@
-/* General Styling */
 body {
-  font-family: 'Inter', sans-serif; /* Modern sans-serif font */
-  background-color: #f9f9f9; /* Light background for contrast */
+  font-family: 'Inter', sans-serif;
+  background-color: #f9f9f9;
   margin: 0;
   padding: 0;
 }
@@ -9,9 +8,9 @@ body {
 .home-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   width: 100vw;
-  background-color: #c3c4c4; /* Slightly off-white background */
+  background-color: #c3c4c4;
 }
 
 .content-container {
@@ -21,68 +20,63 @@ body {
   align-items: center;
   flex-grow: 1;
   padding: 0 4vw;
-  padding-bottom: 9vh; /* Account for bottom navbar */
-  padding-top: 9vh; /* Account for Header */
+  padding-bottom: 9vh; 
+  padding-top: 9vh;
   box-sizing: border-box;
   overflow-y: auto;
 }
 
-/* Upload Button Styling */
 .upload-shortcut {
   width: 92vw;
-  background-color: #4CAF50; /* Modern green button */
+  background-color: #4CAF50;
   border: none;
   border-radius: 8px;
   padding: 10px;
   font-size: 18px;
-  color: white; /* Text color for contrast */
+  color: white;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40); /* Modern shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
   margin-bottom: 2vw;
 }
 
 .upload-shortcut:hover {
-  background-color: #45a049; /* Darker green on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Stronger shadow on hover */
-  transform: scale(1.015); /* Slightly enlarge the card */
+  background-color: #45a049;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: scale(1.015);
 }
 
 .upload-shortcut:active {
-  background-color: #39943b; /* Even darker on active */
+  background-color: #39943b;
 }
 
-/* Info Cards Styling */
 .info {
   width: 92vw;
   background-color: white;
-  border: none; /* No borders for a clean look */
+  border: none; 
   border-radius: 12px;
   padding: 10px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Modern shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   margin-bottom: 2vw;
-  flex-grow: 1; /* Expands to fill space */
+  flex-grow: 1;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-/* Hover Effect */
 .info:hover {
-  transform: scale(1.015); /* Slightly enlarge the card */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+  transform: scale(1.015);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Image Styling */
 .meal-image {
-  max-width: 50vh; /* Fully responsive */
-  max-height: 50vh; /* Limit height based on viewport */
-  object-fit: cover; /* Scale and crop */
-  border-radius: 8px; /* Rounded corners */
+  max-width: 50vh;
+  max-height: 50vh;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
-/* Nutrition Info Styling */
 .nutrition-info {
   display: flex;
   flex-wrap: wrap;
@@ -91,21 +85,19 @@ body {
   text-align: center;
   font-size: 16px;
   font-weight: 500;
-  color: #333; /* Darker text for contrast */
+  color: #333; 
   margin-top: 10px;
 }
 
-/* Headings */
 h2 {
   font-size: 24px;
   font-weight: 600;
   margin-top: 5px;
   margin-bottom: 15px;
-  color: #222; /* Dark gray for heading */
+  color: #222;
 }
 
-/* General Text Styling */
 span, p {
   font-size: 16px;
-  color: #555; /* Medium gray for general text */
+  color: #555;
 }

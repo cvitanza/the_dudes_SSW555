@@ -5,9 +5,9 @@
   background-color: #ffffff;
   border-top: 1px solid #ccc;
   display: flex;
-  padding: 0; /* Remove padding */
-  margin: 0; /* Remove margin */
-  height: 8vh; /* Adjust height as necessary */
+  padding: 0; 
+  margin: 0;
+  height: 8vh;
 }
 
 .bottom-nav ul {
@@ -17,39 +17,39 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  height: 100%; /* Make sure ul takes full height */
+  height: 100%;
 }
 
 .bottom-nav li {
-  flex: 1; /* Allow list items to grow */
+  flex: 1;
   text-align: center;
-  height: 100%; /* Ensure list items take full height */
+  height: 100%;
 }
 
 .bottom-nav li a {
   text-decoration: none;
   color: #333;
   font-size: 20px;
-  display: flex; /* Use flexbox for centering */
-  justify-content: center; /* Center icon horizontally */
-  align-items: center; /* Center icon vertically */
-  height: 100%; /* Fill the full height of li */
-  padding: 0; /* Remove extra padding */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0;
 }
 
 .bottom-nav li.active a {
-  background-color: rgba(141, 141, 141, 0.7); /* Pale light blue with 70% opacity */
-  border-radius: 0; /* Remove border-radius */
+  background-color: rgba(141, 141, 141, 0.7);
+  border-radius: 0;
 }
 
 .bottom-nav li a:hover {
-  background-color: #f0f0f0; /* Light grey on hover */
+  background-color: #f0f0f0;
 }
 
 .bottom-nav li.active a:hover {
-  background-color: rgba(107, 106, 106, 0.7); /* Pale light blue with 70% opacity */
+  background-color: rgba(107, 106, 106, 0.7);
 }
 
 .bottom-nav li a:active {
-  background-color: #d0d0d0; /* Darker grey on click */
+  background-color: #d0d0d0;
 }

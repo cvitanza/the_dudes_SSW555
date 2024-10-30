@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import { RecipesContext } from '../context/RecipesContext';
+import './styles/Recipes.css';
 
 function Recipes() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,52 +48,31 @@ function Recipes() {
     <div>
       <Header title="Explore Recipes" />
       
-      <div style={{ padding: '0px 20px', paddingTop: '10vh', display: 'flex', gap: '10px' }}>
+      <div className="recipes-container">
         <input
           type="text"
           placeholder="Search recipes..."
           value={searchTerm}
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
-          style={{
-            flex: '1',
-            padding: '10px',
-            fontSize: '16px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-          }}
+          className="recipes-input"
         />
-        <button
-          onClick={handleSearchClick}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            borderRadius: '5px',
-            border: 'none',
-            backgroundColor: '#007BFF',
-            color: '#fff',
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={handleSearchClick} className="recipes-button">
           Search
         </button>
       </div>
 
       {loading && <p>Loading...</p>}
 
-      <div style={{ padding: '0px 20px', paddingBottom: '10vh' }}> {/* Added paddingBottom for space below */}
+      <div className="recipes-list">
         {recipes.length > 0 ? (
-          <ul style={{ listStyleType: 'none', paddingLeft: 0 }}> {/* Remove bullet points */}
+          <ul>
             {recipes.map((recipe, index) => (
-              <li key={index} style={{ padding: '10px 0', fontSize: '18px', textAlign: 'left' }}> {/* Left-align links */}
+              <li key={index} className="recipes-list-item">
                 <Link
                   to={`/recipe/${encodeURIComponent(recipe.recipe.uri)}`}
                   state={{ recipe: recipe.recipe }}
-                  style={{
-                    textDecoration: 'none',
-                    color: '#007BFF',
-                    display: 'block', // Make the link span the full width
-                  }}
+                  className="recipes-link"
                 >
                   {recipe.recipe.label}
                 </Link>
@@ -108,3 +88,4 @@ function Recipes() {
 }
 
 export default Recipes;
+

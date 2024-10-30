@@ -1,4 +1,3 @@
-/* Centering the login page */
 .login-page {
   display: flex;
   justify-content: center;
@@ -7,18 +6,16 @@
   background-color: #f4f4f9;
 }
 
-/* Container styling for login */
 .login-container {
   background-color: white;
-  padding: 40px; /* Add padding around the form */
+  padding: 40px;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  width: 320px; /* Adjust width for better spacing */
+  width: 320px;
 }
 
-/* Special styling for the Login title */
 .login-title {
   text-align: center;
   font-size: 24px;
@@ -26,14 +23,13 @@
   color: #333;
 }
 
-/* Input field styling for login */
 .login-input {
   margin-bottom: 20px;
-  padding: 12px; /* Increase padding */
+  padding: 12px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: calc(100% - 24px); /* Add space inside the container */
+  width: calc(100% - 24px);
   box-sizing: border-box;
 }
 
@@ -43,7 +39,6 @@
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* Button styling for login */
 .login-button {
   padding: 12px;
   background-color: #007BFF;

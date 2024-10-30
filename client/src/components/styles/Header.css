@@ -1,22 +1,22 @@
 .page-header {
-  position: fixed; /* Make the header fixed, so it remains at the top */
-  top: 0; /* Align to the top of the page */
-  left: 0; /* Align to the left edge */
-  width: 100vw; /* Full viewport width */
-  height: 8vh; /* Set a fixed height for the header */
-  background-color: rgba(107, 106, 106, 0.7); /* Pale light blue with 80% opacity */
-  display: flex; /* Use Flexbox to center content */
-  justify-content: center; /* Horizontally center the content */
-  align-items: center; /* Vertically center the content */
-  box-sizing: border-box; /* Include padding in width */
-  z-index: 1000; /* Ensure header stays on top of other elements */
-  backdrop-filter: blur(10px); /* Optional: Add blur effect to the content behind */
+  position: fixed; 
+  top: 0; 
+  left: 0;
+  width: 100vw;
+  height: 8vh;
+  background-color: rgba(107, 106, 106, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  box-sizing: border-box; 
+  z-index: 1000;
+  backdrop-filter: blur(10px);
 }
 
 .header-title {
   margin: 0;
   font-size: 24px;
   font-weight: bold;
-  color: #ffffff; /* Dark text color for contrast */
-  opacity: 1; /* Ensures text remains fully opaque */
+  color: #ffffff; 
+  opacity: 1;
 }
