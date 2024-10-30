@@ -6,6 +6,7 @@ import './styles/Upload.css';
 function Upload() {
   const [imageUrl, setImageUrl] = useState(''); // State to store the Cloudinary image URL
   const [loading, setLoading] = useState(false); // State to show loading status
+  const [imageUploaded, setImageUploaded] = useState(false); // State to track if image was uploaded
 
   // Function to send the image to the backend
   const uploadToBackend = async (file) => {
@@ -62,26 +63,69 @@ function Upload() {
     input.click();
   };
 
+  // Handler for "Upload Another Meal" button
+  const resetUpload = () => {
+    setImageUrl('');
+    setLoading(false);
+    setImageUploaded(false);
+  };
+
   return (
     <div className="upload-container">
       <Header title="Upload Meal" />
-      <div className="button-container">
-        <button className="upload-button" onClick={handleCapture}>
-          Take a Picture
+      
+      {/* Show Upload Another Meal button when image is uploaded */}
+      {imageUrl && (
+        <button className="another-meal-button" onClick={resetUpload}>
+          Upload Another Meal
         </button>
-        <button className="upload-button" onClick={handleUpload}>
-          Upload a Picture
-        </button>
-      </div>
+      )}
+
+      {/* Show upload buttons only when no image is being processed */}
+      {!imageUrl && !loading && (
+        <div className="button-container">
+          <button className="upload-button" onClick={handleCapture}>
+            Take a Picture
+          </button>
+          <button className="upload-button" onClick={handleUpload}>
+            Upload a Picture
+          </button>
+        </div>
+      )}
 
       {/* Show loading state */}
-      {loading && <p>Uploading...</p>}
+      {loading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Uploading image...</p>
+        </div>
+      )}
 
-      {/* Show the uploaded image */}
-      {imageUrl && (
-        <div className="uploaded-image">
-          <p>Image Uploaded:</p>
-          <img src={imageUrl} alt="Uploaded Meal" style={{ width: '300px' }} />
+      {/* Show the uploaded image and nutritional data */}
+      {imageUrl && !loading && (
+        <div className="meal-info-box">
+          <img src={imageUrl} alt="Uploaded Meal" className="meal-image" />
+          <div className="meal-details">
+            <h3>Nutritional Information</h3>
+            <div className="nutrition-row">
+              <div className="nutrition-item">
+                <span className="label">Calories:</span>
+                <span className="value">450 kcal</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Protein:</span>
+                <span className="value">20g</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Carbohydrates:</span>
+                <span className="value">55g</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Fat:</span>
+                <span className="value">15g</span>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

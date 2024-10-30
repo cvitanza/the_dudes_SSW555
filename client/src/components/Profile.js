@@ -65,13 +65,18 @@ function Profile({ setIsAuthenticated }) {
         {/* Render profile info if available */}
         {userData && !loading && !error ? (
           <div>
-            <h2>Welcome, {`${userData.firstName} ${userData.lastName}`}</h2>
-            <p>{userData.message}</p>
+            <div className="profile-info">
+              <div className="profile-info-content">
+                <span className="profile-info-left">{userData?.firstName && userData?.lastName ? `${userData.firstName} ${userData.lastName}` : 'Name not available'}</span>
+                <span className="profile-info-right">{userData?.email || 'Email not available'}</span>
+              </div>
+            </div>
+            <div className="profile-header-container">
+              <Signout setIsAuthenticated={setIsAuthenticated} className="signout-button" />
+            </div>
           </div>
         ) : null}
 
-        {/* Render the Signout button and pass setIsAuthenticated */}
-        <Signout setIsAuthenticated={setIsAuthenticated} />
       </div>
     </div>
   );

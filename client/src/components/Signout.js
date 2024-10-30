@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Signout = ({ setIsAuthenticated }) => { // Destructure setIsAuthenticated from props
-  const navigate = useNavigate(); // Initialize useNavigate to redirect
+function Signout({ setIsAuthenticated, className }) {
+  const navigate = useNavigate();
 
   const handleSignout = async () => {
     try {
@@ -44,8 +44,13 @@ const Signout = ({ setIsAuthenticated }) => { // Destructure setIsAuthenticated 
   };
 
   return (
-    <button onClick={handleSignout}>Sign Out</button>
+    <button 
+      className={className}
+      onClick={handleSignout}
+    >
+      Sign Out
+    </button>
   );
-};
+}
 
 export default Signout;
