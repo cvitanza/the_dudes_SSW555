@@ -1,15 +1,22 @@
 .page-header {
-  background-color: #e0f7fa; /* Pale, light blue */
-  padding: 20px;
-  text-align: center;
-  width: 100vw; /* Full viewport width */
-  box-sizing: border-box; /* Ensure padding is included in the width */
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  position: fixed; 
+  top: 0; 
+  left: 0;
+  width: 100vw;
+  height: 8vh;
+  background-color: rgba(107, 106, 106, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  box-sizing: border-box; 
+  z-index: 1000;
+  backdrop-filter: blur(10px);
 }
 
 .header-title {
   margin: 0;
   font-size: 24px;
   font-weight: bold;
-  color: #333; /* Dark text color for contrast */
+  color: #ffffff; 
+  opacity: 1;
 }

@@ -5,9 +5,9 @@
   background-color: #ffffff;
   border-top: 1px solid #ccc;
   display: flex;
-  justify-content: space-around;
-  padding: 0; /* Remove padding */
-  margin: 0; /* Remove any margin */
+  padding: 0; 
+  margin: 0;
+  height: 8vh;
 }
 
 .bottom-nav ul {
@@ -17,35 +17,39 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 .bottom-nav li {
   flex: 1;
   text-align: center;
+  height: 100%;
 }
 
 .bottom-nav li a {
   text-decoration: none;
   color: #333;
   font-size: 20px;
-  display: block;
-  padding: 15px 0; /* Adjust padding to cover full height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0;
 }
 
 .bottom-nav li.active a {
-  background-color: #e0f7fa; /* Light blue for active button */
-  border-radius: 0; /* Remove border-radius */
-  height: 100%; /* Extend to full height */
+  background-color: rgba(141, 141, 141, 0.7);
+  border-radius: 0;
 }
 
 .bottom-nav li a:hover {
-  background-color: #f0f0f0; /* Light grey on hover */
+  background-color: #f0f0f0;
 }
 
 .bottom-nav li.active a:hover {
-  background-color: #e0f7fa; /* Keep blue when hovered if active */
+  background-color: rgba(107, 106, 106, 0.7);
 }
 
 .bottom-nav li a:active {
-  background-color: #d0d0d0; /* Darker grey on click */
+  background-color: #d0d0d0;
 }

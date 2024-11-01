@@ -1,8 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-import userRoutes from './routes/userRoutes.js';
+// import userRoutes from './routes/userRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import cors from 'cors';
 
 dotenv.config();
@@ -17,8 +18,9 @@ connectDB();
 app.use(cors());
 
 // User routes
-app.use('/api/users', userRoutes);
-
+// app.use('/api/users', userRoutes);
+// Auth routes
+app.use('/api/auth', authRoutes);
 // Upload routes
 app.use('/api/upload', uploadRoutes);
 

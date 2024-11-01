@@ -1,22 +1,24 @@
 .upload-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  width: 100vw;
+  background-color: #c3c4c4; /* Slightly off-white background */
+  padding: 10vh 0;
 }
 
 .button-container {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
   flex-grow: 1;
-  padding: 10px;
-  padding-bottom: 70px; /* Padding to account for the bottom navbar */
+  padding: 0 2vw;
   box-sizing: border-box;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 80vh;
 }
 
 .upload-button {
-  width: 95%;
+  width: 100%;
   background-color: white;
   border: 2px solid #ccc;
   border-radius: 12px;
@@ -25,20 +27,106 @@
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  flex-grow: 1; /* Makes the buttons grow to fill vertical space */
-  margin: 10px 0; /* Adds spacing between the buttons */
+  flex-grow: 1; 
+  margin: 1vw 0; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .upload-button:hover {
   background-color: #f0f0f0;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.015); 
 }
 
 .upload-button:active {
   background-color: #e0e0e0;
 }
 
-.upload-button + .upload-button {
+.another-meal-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  margin: 0 4vw;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.another-meal-button:hover {
+  transform: scale(1.015);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  height: 80vh;
+  margin: 0;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.meal-info-box {
+  background-color: white;
+  border-radius: 10px;
+  padding: 0 4vw;
+  padding-top: 2vh;
+  margin: 2vh 4vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  height: 72vh;
+}
+
+.meal-info-box:hover {
+  transform: scale(1.015);
+}
+
+.meal-image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.meal-details {
+  text-align: left;
+}
+
+.nutrition-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
   margin-top: 10px;
+}
+
+.nutrition-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.label {
+  font-weight: bold;
+  color: #666;
+}
+
+.value {
+  color: #333;
 }

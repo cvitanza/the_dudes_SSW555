@@ -1,14 +1,13 @@
-// middleware/authMiddleware.js
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
+
 
 const protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      // Get the token from the header
-      token = req.headers.authorization.split(' ')[1];
+      token = req.headers.authorization.split(' ')[1]; // Extract token from header
 
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
