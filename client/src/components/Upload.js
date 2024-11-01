@@ -63,28 +63,6 @@ function Upload() {
     input.click();
   };
 
-<<<<<<< HEAD
-  return (
-    <div className="upload-container">
-      <Header title="Upload Meal" />
-      <div className="button-container">
-        <button className="upload-button" onClick={handleCapture}>
-          Take a Picture
-        </button>
-        <button className="upload-button" onClick={handleUpload}>
-          Upload a Picture
-        </button>
-      </div>
-
-      {/* Show loading state */}
-      {loading && <p>Uploading...</p>}
-
-      {/* Show the uploaded image */}
-      {imageUrl && (
-        <div className="uploaded-image">
-          <p>Image Uploaded:</p>
-          <img src={imageUrl} alt="Uploaded Meal" style={{ width: '300px' }} />
-=======
   // Handler for "Upload Another Meal" button
   const resetUpload = () => {
     setImageUrl('');
@@ -148,7 +126,6 @@ function Upload() {
               </div>
             </div>
           </div>
->>>>>>> dev
         </div>
       )}
     </div>

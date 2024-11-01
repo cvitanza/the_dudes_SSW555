@@ -53,8 +53,6 @@ function Profile({ setIsAuthenticated }) {
   return (
     <div>
       <Header title="My Profile" />
-<<<<<<< HEAD
-=======
       
       <div className='profile-container'>
         
@@ -80,7 +78,6 @@ function Profile({ setIsAuthenticated }) {
         ) : null}
 
       </div>
->>>>>>> dev
     </div>
   );
 }
