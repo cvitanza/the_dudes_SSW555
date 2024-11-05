@@ -5,8 +5,6 @@ import BottomNav from './components/BottomNav';
 import Home from './components/Home';
 import Upload from './components/Upload';
 import Profile from './components/Profile';
-import Favorites from './components/Favorites';
-import Recipes from './components/Recipes';
 import RecipeDetail from './components/RecipeDetail';
 import Login from './components/Login';
 import Signup from './components/Signup';
