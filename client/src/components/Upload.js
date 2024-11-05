@@ -3,10 +3,16 @@ import axios from 'axios'; // For HTTP requests to the backend
 import Header from './Header';
 import './styles/Upload.css';
 
-function Upload() {
-  const [imageUrl, setImageUrl] = useState(''); // State to store the Cloudinary image URL
-  const [loading, setLoading] = useState(false); // State to show loading status
+function Upload({ testImageUrl, testLoading }) {
+  const [imageUrl, setImageUrl] = useState(testImageUrl || '');
+  const [loading, setLoading] = useState(testLoading || false);
   const [imageUploaded, setImageUploaded] = useState(false); // State to track if image was uploaded
+  const [nutritionData, setNutritionData] = useState({
+    calories: { value: 450, unit: 'kcal' },
+    protein: { value: 20, unit: 'g' },
+    carbohydrates: { value: 55, unit: 'g' },
+    fat: { value: 15, unit: 'g' }
+  });
 
   // Function to send the image to the backend
   const uploadToBackend = async (file) => {
@@ -29,35 +35,18 @@ function Upload() {
     }
   };
 
-  // Handler for capturing a picture
-  const handleCapture = () => {
-    console.log('Capture button clicked');
+  const handleImageSelection = (useCamera = false) => {
+    console.log(`${useCamera ? 'Capture' : 'Upload'} button clicked`);
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    input.capture = 'camera'; // Prompts the camera interface on mobile devices
+    if (useCamera) input.capture = 'camera';
+    
     input.onchange = (event) => {
       const file = event.target.files[0];
       if (file) {
-        console.log('Captured photo:', file);
-        uploadToBackend(file); // Upload captured photo to the backend
-      }
-    };
-    input.click();
-  };
-
-  // Handler for uploading an existing picture
-  const handleUpload = () => {
-    console.log('Upload button clicked');
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (event) => {
-      console.log("firedd ")
-      const file = event.target.files[0];
-      if (file) {
-        console.log('Uploaded photo:', file);
-        uploadToBackend(file); // Upload selected photo to the backend
+        console.log(`${useCamera ? 'Captured' : 'Uploaded'} photo:`, file);
+        uploadToBackend(file);
       }
     };
     input.click();
@@ -84,10 +73,10 @@ function Upload() {
       {/* Show upload buttons only when no image is being processed */}
       {!imageUrl && !loading && (
         <div className="button-container">
-          <button className="upload-button" onClick={handleCapture}>
+          <button className="upload-button" onClick={() => handleImageSelection(true)}>
             Take a Picture
           </button>
-          <button className="upload-button" onClick={handleUpload}>
+          <button className="upload-button" onClick={() => handleImageSelection()}>
             Upload a Picture
           </button>
         </div>
@@ -108,22 +97,12 @@ function Upload() {
           <div className="meal-details">
             <h3>Nutritional Information</h3>
             <div className="nutrition-row">
-              <div className="nutrition-item">
-                <span className="label">Calories:</span>
-                <span className="value">450 kcal</span>
-              </div>
-              <div className="nutrition-item">
-                <span className="label">Protein:</span>
-                <span className="value">20g</span>
-              </div>
-              <div className="nutrition-item">
-                <span className="label">Carbohydrates:</span>
-                <span className="value">55g</span>
-              </div>
-              <div className="nutrition-item">
-                <span className="label">Fat:</span>
-                <span className="value">15g</span>
-              </div>
+              {Object.entries(nutritionData).map(([nutrient, data]) => (
+                <div key={nutrient} className="nutrition-item" data-testid="nutrition-item">
+                  <span className="label">{nutrient.charAt(0).toUpperCase() + nutrient.slice(1)}:</span>
+                  <span className="value">{data.value}{data.unit}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
