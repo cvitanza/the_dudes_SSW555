@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import { RecipesContext } from '../context/RecipesContext';
@@ -9,14 +9,10 @@ function Recipes() {
   const { recipes, setRecipes } = useContext(RecipesContext);
   const [loading, setLoading] = useState(false);
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
-  const fetchRecipes = async () => {
-    if (searchTerm.trim() === '') {
-      return;
-    }
+  const fetchRecipes = useCallback(async () => {
+    if (!searchTerm.trim()) return;
 
     setLoading(true);
     try {
@@ -25,29 +21,43 @@ function Recipes() {
       const response = await fetch(
         `https://api.edamam.com/api/recipes/v2?type=public&q=${searchTerm}&app_id=${appId}&app_key=${appKey}`
       );
+      if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
-      const recipes = data.hits;
-      setRecipes(recipes);
+      setRecipes(data.hits || []);
     } catch (error) {
       console.error('Error fetching recipes:', error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
+  }, [searchTerm, setRecipes]);
 
-  const handleSearchClick = () => {
-    fetchRecipes();
-  };
+  const handleSearch = () => fetchRecipes();
+  const handleKeyDown = (e) => e.key === 'Enter' && fetchRecipes();
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      fetchRecipes();
-    }
+  const renderRecipesList = () => {
+    if (loading) return <p>Loading...</p>;
+    if (!recipes.length) return <p>No recipes found.</p>;
+
+    return (
+      <ul>
+        {recipes.map((recipeData, index) => (
+          <li key={index} className="recipes-list-item">
+            <Link
+              to={`/recipe/${encodeURIComponent(recipeData.recipe.uri)}`}
+              state={{ recipe: recipeData.recipe }}
+              className="recipes-link"
+            >
+              {recipeData.recipe.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
     <div>
       <Header title="Explore Recipes" />
-      
       <div className="recipes-container">
         <input
           type="text"
@@ -57,35 +67,13 @@ function Recipes() {
           onKeyDown={handleKeyDown}
           className="recipes-input"
         />
-        <button onClick={handleSearchClick} className="recipes-button">
+        <button onClick={handleSearch} className="recipes-button">
           Search
         </button>
       </div>
-
-      {loading && <p>Loading...</p>}
-
-      <div className="recipes-list">
-        {recipes.length > 0 ? (
-          <ul>
-            {recipes.map((recipe, index) => (
-              <li key={index} className="recipes-list-item">
-                <Link
-                  to={`/recipe/${encodeURIComponent(recipe.recipe.uri)}`}
-                  state={{ recipe: recipe.recipe }}
-                  className="recipes-link"
-                >
-                  {recipe.recipe.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          !loading && <p>No recipes found.</p>
-        )}
-      </div>
+      <div className="recipes-list">{renderRecipesList()}</div>
     </div>
   );
 }
 
 export default Recipes;
-
