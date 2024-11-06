@@ -7,17 +7,38 @@ function RecipeDetail() {
   const navigate = useNavigate();
   const { recipe } = location.state || {};
 
-  const handleBackClick = () => {
-    navigate(-1);
+  const handleBackClick = () => navigate(-1);
+
+  // Helper functions
+  const formatMealType = (mealType) => {
+    if (typeof mealType === 'string') {
+      return mealType
+        .split('/')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('/');
+    }
+    return mealType;
   };
 
-  // Helper function to format meal type
-  const formatMealType = (mealType) => {
-    return mealType
-      .split('/')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('/');
-  };
+  const formatNutrient = (nutrient, decimalPlaces = 1) =>
+    nutrient ? nutrient.quantity.toFixed(decimalPlaces) : 'N/A';
+
+  const renderListItems = (items, Component) =>
+    items?.length ? items.map((item, index) => <Component key={index} item={item} />) : null;
+
+  // Inner component definitions with access to helper functions
+  const IngredientItem = ({ item }) => <li>- {item.text}</li>;
+
+  const CuisineType = ({ item }) => (
+    <span>{item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()}</span>
+  );
+
+  // Use formatMealType here directly
+  const MealType = ({ item }) => (
+    <span>{formatMealType(item)}</span>
+  );
+
+  const HealthLabel = ({ item }) => <span className="health-label">{item}</span>;
 
   return (
     <div className="recipe-detail-container">
@@ -37,11 +58,12 @@ function RecipeDetail() {
 
           <div className="recipe-details">
             <h2>Recipe Details</h2>
-            <p><strong>Cuisine:</strong> {recipe.cuisineType?.map(type => type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()).join(', ')}</p>
-            <p><strong>Meal Type:</strong> {recipe.mealType?.map(type => formatMealType(type)).join(', ')}</p>
+            <p><strong>Cuisine:</strong> {renderListItems(recipe.cuisineType, CuisineType)}</p>
+            <p><strong>Meal Type:</strong> {renderListItems(recipe.mealType, MealType)}</p>
             {recipe.url && (
               <p>
-                <strong>URL:</strong> <a href={recipe.url} target="_blank" rel="noopener noreferrer">{recipe.url}</a>
+                <strong>URL:</strong>{' '}
+                <a href={recipe.url} target="_blank" rel="noopener noreferrer">{recipe.url}</a>
               </p>
             )}
           </div>
@@ -49,28 +71,22 @@ function RecipeDetail() {
           <div className="ingredients-section">
             <h2>Ingredients</h2>
             <ul className="ingredients-list">
-              {recipe.ingredients.map((ingredient, index) => (
-                <li key={index}>- {ingredient.text}</li>
-              ))}
+              {renderListItems(recipe.ingredients, IngredientItem)}
             </ul>
           </div>
 
           <div className="nutrition-section">
             <h2>Nutritional Information</h2>
-            <p><strong>Calories:</strong> {recipe.totalNutrients?.ENERC_KCAL?.quantity.toFixed(0)} kcal</p>
-            <p><strong>Protein:</strong> {recipe.totalNutrients?.PROCNT?.quantity.toFixed(1)} g</p>
-            <p><strong>Fat:</strong> {recipe.totalNutrients?.FAT?.quantity.toFixed(1)} g</p>
-            <p><strong>Carbohydrates:</strong> {recipe.totalNutrients?.CHOCDF?.quantity.toFixed(1)} g</p>
+            <p><strong>Calories:</strong> {formatNutrient(recipe.totalNutrients?.ENERC_KCAL, 0)} kcal</p>
+            <p><strong>Protein:</strong> {formatNutrient(recipe.totalNutrients?.PROCNT)} g</p>
+            <p><strong>Fat:</strong> {formatNutrient(recipe.totalNutrients?.FAT)} g</p>
+            <p><strong>Carbohydrates:</strong> {formatNutrient(recipe.totalNutrients?.CHOCDF)} g</p>
           </div>
 
           <div className="health-labels-section">
             <h2>Health Labels</h2>
             <div className="health-labels-container">
-              {recipe.healthLabels?.map((label, index) => (
-                <span key={index} className="health-label">
-                  {label}
-                </span>
-              ))}
+              {renderListItems(recipe.healthLabels, HealthLabel)}
             </div>
           </div>
         </>
@@ -82,3 +98,4 @@ function RecipeDetail() {
 }
 
 export default RecipeDetail;
+
