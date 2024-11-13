@@ -6,39 +6,72 @@ import './styles/Upload.css';
 function Upload({ testImageUrl, testLoading }) {
   const [imageUrl, setImageUrl] = useState(testImageUrl || '');
   const [loading, setLoading] = useState(testLoading || false);
+  const [error, setError] = useState(null);
   const [nutritionData, setNutritionData] = useState({
-    calories: { value: 450, unit: 'kcal' },
-    protein: { value: 20, unit: 'g' },
-    carbohydrates: { value: 55, unit: 'g' },
-    fat: { value: 15, unit: 'g' }
+    calories: { value: 0, unit: 'kcal' },
+    protein: { value: 0, unit: 'g' },
+    carbohydrates: { value: 0, unit: 'g' },
+    fat: { value: 0, unit: 'g' }
   });
 
-  // Function to send the image to the backend
-  const uploadToBackend = async (file) => {
-    const formData = new FormData();
-    formData.append('image', file); // Append the image file
-
+  // Simulated nutrition API call (to be replaced with actual API)
+  const processNutritionData = async (imageFile) => {
     try {
       setLoading(true);
+      // TODO: Replace with actual API call
+      // Simulating API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Simulate nutrition API response
+      const mockNutritionData = {
+        calories: { value: Math.floor(Math.random() * 800 + 200), unit: 'kcal' },
+        protein: { value: Math.floor(Math.random() * 50 + 10), unit: 'g' },
+        carbohydrates: { value: Math.floor(Math.random() * 100 + 30), unit: 'g' },
+        fat: { value: Math.floor(Math.random() * 30 + 5), unit: 'g' }
+      };
+      
+      setNutritionData(mockNutritionData);
+      return mockNutritionData;
+    } catch (err) {
+      setError('Failed to process nutrition data');
+      throw err;
+    }
+  };
+
+  const uploadToBackend = async (file) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // First, process nutrition data
+      const processedNutrition = await processNutritionData(file);
+      
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      // Add processed nutrition data to form data
+      formData.append('calories', processedNutrition.calories.value);
+      formData.append('protein', processedNutrition.protein.value);
+      formData.append('carbohydrates', processedNutrition.carbohydrates.value);
+      formData.append('fat', processedNutrition.fat.value);
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
       const response = await axios.post('http://localhost:5000/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         },
       });
-      console.log('Uploaded to Cloudinary:', response.data.url);
-      setImageUrl(response.data.url); 
       
-      // TODO: Replace with actual API call to nutrition analysis service
-      setNutritionData({
-        calories: { value: Math.floor(Math.random() * 800 + 200), unit: 'kcal' },
-        protein: { value: Math.floor(Math.random() * 30 + 10), unit: 'g' },
-        carbohydrates: { value: Math.floor(Math.random() * 60 + 20), unit: 'g' },
-        fat: { value: Math.floor(Math.random() * 25 + 5), unit: 'g' }
-      });
-      
-      setLoading(false);
+      setImageUrl(response.data.url);
     } catch (error) {
-      console.error('Error uploading to Cloudinary:', error);
+      console.error('Error uploading:', error);
+      setError(error.response?.data?.error || error.response?.data?.message || 'Failed to upload image');
+    } finally {
       setLoading(false);
     }
   };
@@ -70,14 +103,18 @@ function Upload({ testImageUrl, testLoading }) {
     <div className="upload-container">
       <Header title="Upload Meal" />
       
-      {/* Show Upload Another Meal button when image is uploaded */}
+      {error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+      
       {imageUrl && (
         <button className="another-meal-button" onClick={resetUpload}>
           Upload Another Meal
         </button>
       )}
 
-      {/* Show upload buttons only when no image is being processed */}
       {!imageUrl && !loading && (
         <div className="button-container">
           <button className="upload-button" onClick={() => handleImageSelection(true)}>
@@ -89,7 +126,6 @@ function Upload({ testImageUrl, testLoading }) {
         </div>
       )}
 
-      {/* Show loading state */}
       {loading && (
         <div className="loading-container">
           <div className="loading-spinner"></div>
@@ -97,10 +133,17 @@ function Upload({ testImageUrl, testLoading }) {
         </div>
       )}
 
-      {/* Show the uploaded image and nutritional data */}
       {imageUrl && !loading && (
         <div className="meal-info-box">
-          <img src={imageUrl} alt="Uploaded Meal" className="meal-image" />
+          <img 
+            src={imageUrl} 
+            alt="Uploaded Meal" 
+            className="meal-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
+            }}
+          />
           <div className="meal-details">
             <h3>Nutritional Information</h3>
             <div className="nutrition-row">

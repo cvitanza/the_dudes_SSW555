@@ -1,88 +1,110 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Header from './Header';
 import './styles/Home.css';
 
-// Import the placeholder image
-import placeholderImage from './dummy/placeholder_meal.jpg';
-
 function Home() {
   const navigate = useNavigate();
+  const [lastMeal, setLastMeal] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // TODO: backend instead of random display
-  const fetchLastMeal = () => {
-    // Generate random nutrition values
-    const calories = Math.floor(Math.random() * 800) + 200; // Random calories between 200 and 1000
-    const protein = Math.floor(Math.random() * 50) + 10; // Random protein between 10g and 60g
-    const fat = Math.floor(Math.random() * 30) + 5; // Random fat between 5g and 35g
-    const carbs = Math.floor(Math.random() * 100) + 30; // Random carbs between 30g and 130g
+  useEffect(() => {
+    fetchLastMeal();
+  }, []);
 
-    return {
-      imageUrl: placeholderImage, // Use the imported image
-      nutritionInfo: {
-        calories: calories,
-        protein: protein,
-        fat: fat,
-        carbs: carbs,
+  const fetchLastMeal = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/api/upload/latest', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setLastMeal(response.data);
+      setError(null);
+    } catch (error) {
+      console.error('Error fetching last meal:', error);
+      if (error.response?.status === 404) {
+        setLastMeal(null);
+      } else {
+        setError('Failed to fetch your last meal');
       }
-    };
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const fetchHealthProgress = () => {
-    return {
-      currentCalories: 'N/A',
-      goalCalories: 'N/A'
-    };
-  };
+  const renderLastMeal = () => {
+    if (loading) {
+      return <div className="loading">Loading...</div>;
+    }
 
-  const lastMeal = fetchLastMeal();
-  const healthProgress = fetchHealthProgress();
+    if (error) {
+      return <div className="error">{error}</div>;
+    }
+
+    if (!lastMeal) {
+      return <div className="no-meal">No meals uploaded yet</div>;
+    }
+
+    return (
+      <div className="home-meal-info-box">
+        <h2 className="meal-title">My Last Meal</h2>
+        <img 
+          src={lastMeal.imageUrl} 
+          alt="Last Meal" 
+          className="home-meal-image"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
+          }}
+        />
+        <div className="home-meal-details">
+          <div className="nutrition-info">
+            <div className="nutrition-row">
+              <div className="nutrition-item">
+                <span className="label">Calories:</span>
+                <span className="value">{lastMeal.nutritionInfo?.calories || 0} kcal</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Protein:</span>
+                <span className="value">{lastMeal.nutritionInfo?.protein || 0}g</span>
+              </div>
+            </div>
+            <div className="nutrition-row">
+              <div className="nutrition-item">
+                <span className="label">Carbs:</span>
+                <span className="value">{lastMeal.nutritionInfo?.carbs || 0}g</span>
+              </div>
+              <div className="nutrition-item">
+                <span className="label">Fat:</span>
+                <span className="value">{lastMeal.nutritionInfo?.fat || 0}g</span>
+              </div>
+            </div>
+          </div>
+          {lastMeal.uploadDate && (
+            <div className="upload-date">
+              Uploaded: {new Date(lastMeal.uploadDate).toLocaleDateString()}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="home-container">
       <Header title="My Home" />
       <div className="content-container">
-
-        {/* Upload Meal Button */}
         <button 
           className="upload-shortcut" 
           onClick={() => navigate('/upload')}>
           Upload My Meal
         </button>
-
-        {/* Last Meal Section */}
-        <div className="info">
-          <h2>My Last Meal</h2>
-          <img src={lastMeal.imageUrl} alt="Last Meal" className="meal-image" />
-          <div className="nutrition-info">
-            <h3>Nutritional Information</h3>
-            <div className="nutrition-row">
-              <div className="nutrition-item">
-                <span className="label">Calories:</span>
-                <span className="value">{lastMeal.nutritionInfo.calories} kcal</span>
-              </div>
-              <div className="nutrition-item">
-                <span className="label">Protein:</span>
-                <span className="value">{lastMeal.nutritionInfo.protein}g</span>
-              </div>
-              <div className="nutrition-item">
-                <span className="label">Carbohydrates:</span>
-                <span className="value">{lastMeal.nutritionInfo.carbs}g</span>
-              </div>
-              <div className="nutrition-item">
-                <span className="label">Fat:</span>
-                <span className="value">{lastMeal.nutritionInfo.fat}g</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Health Progress Section */}
-        <div className="info">
-          <h2>My Health Progress</h2>
-          <p>Current Calories: {healthProgress.currentCalories}</p>
-          <p>Goal Calories: {healthProgress.goalCalories}</p>
-        </div>
+        {renderLastMeal()}
       </div>
     </div>
   );
