@@ -5,6 +5,7 @@ import connectDB from './config/db.js';
 import uploadRoutes from './routes/uploadRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import cors from 'cors';
+import './models/imageModel.js';
 
 dotenv.config();
 
