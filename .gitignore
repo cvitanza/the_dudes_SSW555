@@ -1,9 +1,27 @@
-# Ignore node_modules in the server folder
-server/node_modules
-client/node_modules
-# Ignore environment variables
-server/.env
-client/.env
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
 
-node_modules
-.DS_Store
+# Testing
+/coverage
+
+# Production
+/build
+/dist
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
