@@ -6,7 +6,6 @@ import './styles/Upload.css';
 function Upload({ testImageUrl, testLoading }) {
   const [imageUrl, setImageUrl] = useState(testImageUrl || '');
   const [loading, setLoading] = useState(testLoading || false);
-  const [imageUploaded, setImageUploaded] = useState(false); // State to track if image was uploaded
   const [nutritionData, setNutritionData] = useState({
     calories: { value: 450, unit: 'kcal' },
     protein: { value: 20, unit: 'g' },
@@ -28,6 +27,15 @@ function Upload({ testImageUrl, testLoading }) {
       });
       console.log('Uploaded to Cloudinary:', response.data.url);
       setImageUrl(response.data.url); 
+      
+      // TODO: Replace with actual API call to nutrition analysis service
+      setNutritionData({
+        calories: { value: Math.floor(Math.random() * 800 + 200), unit: 'kcal' },
+        protein: { value: Math.floor(Math.random() * 30 + 10), unit: 'g' },
+        carbohydrates: { value: Math.floor(Math.random() * 60 + 20), unit: 'g' },
+        fat: { value: Math.floor(Math.random() * 25 + 5), unit: 'g' }
+      });
+      
       setLoading(false);
     } catch (error) {
       console.error('Error uploading to Cloudinary:', error);
@@ -56,7 +64,6 @@ function Upload({ testImageUrl, testLoading }) {
   const resetUpload = () => {
     setImageUrl('');
     setLoading(false);
-    setImageUploaded(false);
   };
 
   return (
