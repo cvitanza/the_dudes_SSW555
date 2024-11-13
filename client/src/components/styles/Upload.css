@@ -92,6 +92,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   height: 72vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .meal-info-box:hover {
@@ -99,14 +102,20 @@
 }
 
 .meal-image {
-  width: 100%;
-  max-width: 400px;
+  max-width: 90%;
+  max-height: 70%;
+  height: auto;
+  width: auto;
   border-radius: 8px;
   margin-bottom: 15px;
 }
 
 .meal-details {
-  text-align: left;
+  width: 85%;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nutrition-row {
@@ -129,4 +138,13 @@
 
 .value {
   color: #333;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin: 10px 4vw;
+  border-radius: 4px;
+  text-align: center;
 }
