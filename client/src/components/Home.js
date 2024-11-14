@@ -11,46 +11,46 @@ function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const fetchLastMeal = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
+                const response = await axios.get(
+                    `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (response.data.success && response.data.meal) {
+                    setLastMeal({
+                        ...response.data.meal,
+                        imageUrl: `http://localhost:${process.env.REACT_APP_PORT}${response.data.meal.imageUrl}`,
+                        nutritionInfo: {
+                            calories: response.data.meal.nutritionData.calories.value,
+                            protein: response.data.meal.nutritionData.protein.value,
+                            carbs: response.data.meal.nutritionData.carbohydrates.value,
+                            fat: response.data.meal.nutritionData.fat.value
+                        },
+                        uploadDate: response.data.meal.createdAt
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching last meal:', error);
+                setError('Failed to fetch last meal');
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchLastMeal();
     }, []);
-
-    const fetchLastMeal = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                navigate('/login');
-                return;
-            }
-
-            const response = await axios.get(
-                `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                }
-            );
-
-            if (response.data.success && response.data.meal) {
-                setLastMeal({
-                    ...response.data.meal,
-                    imageUrl: `http://localhost:${process.env.REACT_APP_PORT}${response.data.meal.imageUrl}`,
-                    nutritionInfo: {
-                        calories: response.data.meal.nutritionData.calories.value,
-                        protein: response.data.meal.nutritionData.protein.value,
-                        carbs: response.data.meal.nutritionData.carbohydrates.value,
-                        fat: response.data.meal.nutritionData.fat.value
-                    },
-                    uploadDate: response.data.meal.createdAt
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching last meal:', error);
-            setError('Failed to fetch last meal');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const renderLastMeal = () => {
         if (loading) {
