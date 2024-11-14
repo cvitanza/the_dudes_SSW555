@@ -76,3 +76,25 @@ export const login = async (req, res) => {
         res.status(500).json({ message: "Error occurred." });
     }
 };
+
+
+export const deleteUserAccount = async (userId) => {
+    try {
+      await User.findByIdAndDelete(userId); // Replace with your delete logic
+      return { success: true, message: "Account deleted successfully." };
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      return { success: false, message: "Failed to delete account." };
+    }
+  };
+
+  export const deleteAccountHandler = async (req, res) => {
+    const userId = req.user.id; // Assuming user ID is available from the token
+    const result = await deleteUserAccount(userId);
+  
+    if (result.success) {
+      res.status(200).json({ message: result.message });
+    } else {
+      res.status(500).json({ message: result.message });
+    }
+  };
