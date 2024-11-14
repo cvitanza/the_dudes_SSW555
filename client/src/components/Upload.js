@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import Header from './Header';
-import './styles/Upload.css';
 import { useNavigate } from 'react-router-dom';
+import './styles/Upload.css'; // Import specific Upload CSS
+import Header from './Header';
 
 function Upload({ testImageUrl, testLoading }) {
   const [imageUrl, setImageUrl] = useState(testImageUrl || '');

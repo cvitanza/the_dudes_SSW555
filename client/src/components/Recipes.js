@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import { RecipesContext } from '../context/RecipesContext';
@@ -29,10 +29,17 @@ function Recipes() {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, setRecipes]);  // `searchTerm` is the main dependency
+  }, [searchTerm, setRecipes]);
 
-  const handleSearch = () => fetchRecipes();
-  const handleKeyDown = (e) => e.key === 'Enter' && fetchRecipes();
+  const handleSearch = () => {
+    fetchRecipes(); 
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      fetchRecipes();  
+    }
+  };
 
   const renderRecipesList = () => {
     if (loading) return <p>Loading...</p>;
@@ -54,12 +61,6 @@ function Recipes() {
       </ul>
     );
   };
-
-  useEffect(() => {
-    if (searchTerm) {
-      fetchRecipes();
-    }
-  }, [searchTerm]);  // Dependency array now tracks searchTerm
 
   return (
     <div>
