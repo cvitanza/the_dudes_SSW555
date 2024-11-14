@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './styles/Login.css'; // Import the CSS file
 import Header from './Header';
 
 // Constants to avoid duplicated literals
 const TOKEN_KEY = 'token';
-const API_URL = process.env.REACT_APP_API_URL || `http://localhost:${process.env.REACT_APP_PORT || 5000}`;
+const API_URL = `http://localhost:${process.env.REACT_APP_PORT || 5000}`;
 
 const Login = ({ setIsAuthenticated }) => {
   const [userData, setUserData] = useState({
@@ -16,6 +16,15 @@ const Login = ({ setIsAuthenticated }) => {
   const [error, setError] = useState(null); // State for error message
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const message = location.state?.message;
+
+  useEffect(() => {
+    if (message) {
+      // Show message to user (you can use your preferred notification system)
+      alert(message);
+    }
+  }, [message]);
 
   const handleChange = (e) => {
     setUserData({

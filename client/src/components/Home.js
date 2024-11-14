@@ -1,41 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import './styles/Home.css';
 
 function Home() {
-  const navigate = useNavigate();
   const [lastMeal, setLastMeal] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const checkAuth = useCallback(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]); 
 
   useEffect(() => {
-    fetchLastMeal();
-  }, []);
+    checkAuth();
+  }, [checkAuth]); 
 
-  const fetchLastMeal = async () => {
+  const fetchLastMeal = useCallback(async () => {
     try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/upload/latest', {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`,
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }
-      });
-      setLastMeal(response.data);
-      setError(null);
+      );
+
+      if (response.data.success && response.data.meal) {
+        setLastMeal({
+          ...response.data.meal,
+          imageUrl: `http://localhost:${process.env.REACT_APP_PORT}${response.data.meal.imageUrl}`,
+          nutritionInfo: {
+            calories: response.data.meal.nutritionData.calories.value,
+            protein: response.data.meal.nutritionData.protein.value,
+            carbs: response.data.meal.nutritionData.carbohydrates.value,
+            fat: response.data.meal.nutritionData.fat.value
+          },
+          uploadDate: response.data.meal.createdAt
+        });
+      }
     } catch (error) {
       console.error('Error fetching last meal:', error);
-      if (error.response?.status === 404) {
-        setLastMeal(null);
-      } else {
-        setError('Failed to fetch your last meal');
-      }
+      setError('Failed to fetch last meal');
     } finally {
       setLoading(false);
     }
-  };
+  }, []); 
+
+  useEffect(() => {
+    fetchLastMeal();
+  }, [fetchLastMeal]); 
 
   const renderLastMeal = () => {
     if (loading) {
@@ -53,15 +73,17 @@ function Home() {
     return (
       <div className="home-meal-info-box">
         <h2 className="meal-title">My Last Meal</h2>
-        <img 
-          src={lastMeal.imageUrl} 
-          alt="Last Meal" 
-          className="home-meal-image"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
-          }}
-        />
+        <div className="image-container">
+          <img 
+            src={lastMeal.imageUrl} 
+            alt="Last Meal" 
+            className="home-meal-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
+            }}
+          />
+        </div>
         <div className="home-meal-details">
           <div className="nutrition-info">
             <div className="nutrition-row">

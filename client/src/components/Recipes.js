@@ -31,8 +31,15 @@ function Recipes() {
     }
   }, [searchTerm, setRecipes]);
 
-  const handleSearch = () => fetchRecipes();
-  const handleKeyDown = (e) => e.key === 'Enter' && fetchRecipes();
+  const handleSearch = () => {
+    fetchRecipes(); 
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      fetchRecipes();  
+    }
+  };
 
   const renderRecipesList = () => {
     if (loading) return <p>Loading...</p>;

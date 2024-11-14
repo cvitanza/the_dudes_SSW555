@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { removeToken, getToken } from '../components/authService';
 
-const DEFAULT_PORT = 5000; // Set fallback port as a constant
 
 function Signout({ setIsAuthenticated, className }) {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ function Signout({ setIsAuthenticated, className }) {
       }
 
       await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL || `http://localhost:${DEFAULT_PORT}`}/api/auth/signout`, 
+      `${`http://localhost:${process.env.REACT_APP_PORT || 5000}`}/api/auth/signout`, 
         {}, 
         {
           headers: {

@@ -77,26 +77,5 @@ describe('Signout Component', () => {
 
         expect(axios.post).toHaveBeenCalledTimes(1);
     });
-
-    test('uses REACT_APP_API_BASE_URL when available', async () => {
-        process.env.REACT_APP_API_BASE_URL = 'http://testurl.com';
-        axios.post.mockResolvedValueOnce({});
-
-        await act(async () => {
-            fireEvent.click(screen.getByRole('button', { name: /Sign Out/i }));
-        });
-
-        expect(axios.post).toHaveBeenCalledWith(
-            `http://testurl.com/api/auth/signout`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer mockToken`,
-                },
-            }
-        );
-
-        delete process.env.REACT_APP_API_BASE_URL;
-    });
     
 });
