@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // For HTTP requests to the backend
+import axios from 'axios';
 import Header from './Header';
 import './styles/Upload.css';
+import { useNavigate } from 'react-router-dom';
 
 function Upload({ testImageUrl, testLoading }) {
   const [imageUrl, setImageUrl] = useState(testImageUrl || '');
@@ -13,29 +14,17 @@ function Upload({ testImageUrl, testLoading }) {
     carbohydrates: { value: 0, unit: 'g' },
     fat: { value: 0, unit: 'g' }
   });
+  const navigate = useNavigate();
 
-  // Simulated nutrition API call (to be replaced with actual API)
-  const processNutritionData = async (imageFile) => {
-    try {
-      setLoading(true);
-      // TODO: Replace with actual API call
-      // Simulating API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simulate nutrition API response
-      const mockNutritionData = {
-        calories: { value: Math.floor(Math.random() * 800 + 200), unit: 'kcal' },
-        protein: { value: Math.floor(Math.random() * 50 + 10), unit: 'g' },
-        carbohydrates: { value: Math.floor(Math.random() * 100 + 30), unit: 'g' },
-        fat: { value: Math.floor(Math.random() * 30 + 5), unit: 'g' }
-      };
-      
-      setNutritionData(mockNutritionData);
-      return mockNutritionData;
-    } catch (err) {
-      setError('Failed to process nutrition data');
-      throw err;
-    }
+  const handleTokenExpiration = () => {
+    // Clear local storage
+    localStorage.clear();
+    // Redirect to login with a message
+    navigate('/login', { 
+      state: { 
+        message: 'Your session has expired. Please log in again.' 
+      } 
+    });
   };
 
   const uploadToBackend = async (file) => {
@@ -43,34 +32,77 @@ function Upload({ testImageUrl, testLoading }) {
       setLoading(true);
       setError(null);
 
-      // First, process nutrition data
-      const processedNutrition = await processNutritionData(file);
-      
-      const formData = new FormData();
-      formData.append('image', file);
-      
-      // Add processed nutrition data to form data
-      formData.append('calories', processedNutrition.calories.value);
-      formData.append('protein', processedNutrition.protein.value);
-      formData.append('carbohydrates', processedNutrition.carbohydrates.value);
-      formData.append('fat', processedNutrition.fat.value);
-
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No authentication token found');
       }
 
-      const response = await axios.post('http://localhost:5000/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        },
-      });
-      
-      setImageUrl(response.data.url);
+      // Create form data with the image
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const detectResponse = await axios.post(
+          `http://localhost:${process.env.REACT_APP_PORT}/api/nutrition/detect`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${token}`
+            },
+          }
+        );
+
+        if (detectResponse.data.success && detectResponse.data.foods) {
+          const food = detectResponse.data.foods[0];
+          
+          // Create temporary URL for the uploaded image
+          const imageObjectUrl = URL.createObjectURL(file);
+          
+          // Save meal with image and nutrition data
+          const saveMealFormData = new FormData();
+          saveMealFormData.append('image', file);
+          
+          const nutritionData = {
+            calories: { value: food.calories, unit: 'kcal' },
+            protein: { value: food.protein, unit: 'g' },
+            carbohydrates: { value: food.carbs, unit: 'g' },
+            fat: { value: food.fat, unit: 'g' }
+          };
+          
+          saveMealFormData.append('nutritionData', JSON.stringify(nutritionData));
+
+          const saveMealResponse = await axios.post(
+            `http://localhost:${process.env.REACT_APP_PORT}/api/upload/save`,
+            saveMealFormData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          );
+
+          if (saveMealResponse.data.success) {
+            setImageUrl(imageObjectUrl);
+            setNutritionData(nutritionData);
+            navigate('/');
+          }
+        }
+      } catch (error) {
+        if (error.response?.status === 401 && error.response?.data?.isExpired) {
+          handleTokenExpiration();
+          return;
+        }
+        throw error;
+      }
     } catch (error) {
       console.error('Error uploading:', error);
-      setError(error.response?.data?.error || error.response?.data?.message || 'Failed to upload image');
+      if (error.response?.status === 401) {
+        handleTokenExpiration();
+      } else {
+        setError(error.response?.data?.error || error.message || 'Failed to upload image');
+      }
     } finally {
       setLoading(false);
     }
@@ -93,7 +125,6 @@ function Upload({ testImageUrl, testLoading }) {
     input.click();
   };
 
-  // Handler for "Upload Another Meal" button
   const resetUpload = () => {
     setImageUrl('');
     setLoading(false);
@@ -129,7 +160,7 @@ function Upload({ testImageUrl, testLoading }) {
       {loading && (
         <div className="loading-container">
           <div className="loading-spinner"></div>
-          <p>Uploading image...</p>
+          <p>Analyzing your meal...</p>
         </div>
       )}
 

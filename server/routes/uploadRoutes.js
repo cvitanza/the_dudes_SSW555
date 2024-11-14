@@ -1,111 +1,121 @@
-// server/routes/uploadRoutes.js
+// server/routes/nutritionRoutes.js
 import express from 'express';
 import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
-import Image from '../models/imageModel.js';
 import protect from '../middleware/authMiddleware.js';
+import Meal from '../models/mealModel.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for image storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadsDir)
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, uniqueSuffix + path.extname(file.originalname))
+    }
+});
+
+const upload = multer({ storage: storage });
 
 const router = express.Router();
-const storage = multer.memoryStorage();
 
-// Define file filter to accept only image files
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true); // Accept the file
-  } else {
-    cb(new Error('Invalid file type. Only JPEG, PNG, and GIF files are allowed.'), false); // Reject the file
-  }
-};
+// Save meal with image and nutrition data
+router.post('/save', protect, upload.single('image'), async (req, res) => {
+    try {
+        console.log('Save endpoint hit');
+        console.log('Request body:', req.body);
+        console.log('File:', req.file);
 
-const upload = multer({ 
-  storage,
-  fileFilter // Use the file filter
-});
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                error: 'No image file provided'
+            });
+        }
 
-router.post('/', protect, upload.single('image'), async (req, res) => {
-  try {
-    // Configure cloudinary if not already configured
-    if (!cloudinary.config().cloud_name) {
-      cloudinary.config({
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_API_KEY,
-        api_secret: process.env.CLOUDINARY_API_SECRET,
-      });
+        const { nutritionData } = req.body;
+        
+        if (!nutritionData) {
+            return res.status(400).json({
+                success: false,
+                error: 'No nutrition data provided'
+            });
+        }
+
+        // Parse nutrition data if it's a string
+        const parsedNutritionData = typeof nutritionData === 'string' 
+            ? JSON.parse(nutritionData) 
+            : nutritionData;
+
+        // Create image URL
+        const imageUrl = `/uploads/${req.file.filename}`;
+
+        console.log('Creating new meal with:', {
+            user: req.user._id,
+            imageUrl,
+            nutritionData: parsedNutritionData
+        });
+
+        const newMeal = new Meal({
+            user: req.user._id,
+            imageUrl,
+            nutritionData: parsedNutritionData
+        });
+
+        const savedMeal = await newMeal.save();
+        console.log('Meal saved successfully:', savedMeal);
+
+        res.json({
+            success: true,
+            meal: savedMeal
+        });
+    } catch (error) {
+        console.error('Error saving meal:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to save meal',
+            details: error.message
+        });
     }
-
-    const fileStr = `data:image/jpeg;base64,${req.file.buffer.toString('base64')}`;
-    const uploadResponse = await cloudinary.uploader.upload(fileStr);
-    
-    // Add console.log statements to debug
-    console.log('Request body:', req.body);
-    console.log('User:', req.user);
-    console.log('Cloudinary response:', uploadResponse);
-
-    // Create new image document
-    const newImage = new Image({
-      userId: req.user._id,
-      cloudinaryUrl: uploadResponse.secure_url,
-      nutritionData: {
-        calories: req.body.calories || 0,
-        protein: req.body.protein || 0,
-        carbohydrates: req.body.carbohydrates || 0,
-        fat: req.body.fat || 0
-      }
-    });
-
-    await newImage.save();
-    console.log('Saved image:', newImage);
-
-    res.json({ 
-      url: uploadResponse.secure_url,
-      imageId: newImage._id
-    });
-  } catch (error) {
-    console.error('Detailed upload error:', error);
-    res.status(500).json({ 
-      message: 'Server error',
-      error: error.message 
-    });
-  }
 });
 
-// Get user's upload history
-router.get('/history', protect, async (req, res) => {
-  try {
-    const images = await Image.find({ userId: req.user._id })
-      .sort({ uploadDate: -1 }); // Most recent first
-    res.json(images);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching image history' });
-  }
-});
-
-// Add this route after the existing POST route
+// Get latest meal
 router.get('/latest', protect, async (req, res) => {
-  try {
-    const latestImage = await Image.findOne({ userId: req.user._id })
-      .sort({ uploadDate: -1 }) // Sort by upload date descending
-      .limit(1);
+    try {
+        const latestMeal = await Meal.findOne({ user: req.user._id })
+            .sort({ createdAt: -1 })
+            .limit(1);
 
-    if (!latestImage) {
-      return res.status(404).json({ message: 'No meals found' });
+        if (!latestMeal) {
+            return res.status(404).json({
+                success: false,
+                message: 'No meals found'
+            });
+        }
+
+        res.json({
+            success: true,
+            meal: latestMeal
+        });
+    } catch (error) {
+        console.error('Error fetching latest meal:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch latest meal'
+        });
     }
-
-    res.json({
-      imageUrl: latestImage.cloudinaryUrl,
-      nutritionInfo: {
-        calories: latestImage.nutritionData.calories,
-        protein: latestImage.nutritionData.protein,
-        carbs: latestImage.nutritionData.carbohydrates,
-        fat: latestImage.nutritionData.fat
-      },
-      uploadDate: latestImage.uploadDate
-    });
-  } catch (error) {
-    console.error('Error fetching latest meal:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
 });
 
 export default router;
