@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './styles/Login.css'; // Import the CSS file
 import Header from './Header';
+
+// Constants to avoid duplicated literals
+const TOKEN_KEY = 'token';
+const API_URL = `http://localhost:${process.env.REACT_APP_PORT || 5000}`;
 
 const Login = ({ setIsAuthenticated }) => {
   const [userData, setUserData] = useState({
     email: '',
     password: ''
   });
+  const [error, setError] = useState(null); // State for error message
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const message = location.state?.message;
+
+  useEffect(() => {
+    if (message) {
+      // Show message to user (you can use your preferred notification system)
+      alert(message);
+    }
+  }, [message]);
 
   const handleChange = (e) => {
     setUserData({
@@ -22,18 +36,19 @@ const Login = ({ setIsAuthenticated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const port = process.env.REACT_APP_PORT || 5000;
     try {
-      const res = await axios.post(`http://localhost:${port}/api/auth/login`, userData);
+      const res = await axios.post(`${API_URL}/api/auth/login`, userData);
       const { token } = res.data;
 
       // Store the token in localStorage
-      localStorage.setItem('token', token);
+      localStorage.setItem(TOKEN_KEY, token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setIsAuthenticated(true);
       navigate("/");
     } catch (error) {
-      console.log("Login failed");
+      // Display an error message to the user
+      setError("Login failed. Please check your credentials and try again.");
+      console.log("Login failed", error);
     }
   };
 
@@ -46,7 +61,11 @@ const Login = ({ setIsAuthenticated }) => {
       <Header title="Diet Analyzer" />
       <div className="login-page"> {/* Wrapper div for centering */}
         <div className="login-container">
-          <h1 className="login-title">Login</h1> {/* Added h1 with a unique class */}
+          <h1 className="login-title">Login</h1>
+          
+          {/* Show error message if login fails */}
+          {error && <p className="error-message">{error}</p>}
+
           <form onSubmit={handleSubmit}>
             <input
               type="email"

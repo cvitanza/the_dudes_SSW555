@@ -1,33 +1,121 @@
+// server/routes/nutritionRoutes.js
 import express from 'express';
 import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
-import dotenv from 'dotenv';
+import protect from '../middleware/authMiddleware.js';
+import Meal from '../models/mealModel.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Cloudinary config
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for image storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadsDir)
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, uniqueSuffix + path.extname(file.originalname))
+    }
 });
+
+const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-// Multer setup for file storage in memory
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+// Save meal with image and nutrition data
+router.post('/save', protect, upload.single('image'), async (req, res) => {
+    try {
+        console.log('Save endpoint hit');
+        console.log('Request body:', req.body);
+        console.log('File:', req.file);
 
-// POST route to handle image uploads
-router.post('/', upload.single('image'), async (req, res) => {
-  try {
-    const fileStr = `data:image/jpeg;base64,${req.file.buffer.toString('base64')}`;
-    const uploadResponse = await cloudinary.uploader.upload(fileStr);
-    res.json({ url: uploadResponse.secure_url });
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                error: 'No image file provided'
+            });
+        }
+
+        const { nutritionData } = req.body;
+        
+        if (!nutritionData) {
+            return res.status(400).json({
+                success: false,
+                error: 'No nutrition data provided'
+            });
+        }
+
+        // Parse nutrition data if it's a string
+        const parsedNutritionData = typeof nutritionData === 'string' 
+            ? JSON.parse(nutritionData) 
+            : nutritionData;
+
+        // Create image URL
+        const imageUrl = `/uploads/${req.file.filename}`;
+
+        console.log('Creating new meal with:', {
+            user: req.user._id,
+            imageUrl,
+            nutritionData: parsedNutritionData
+        });
+
+        const newMeal = new Meal({
+            user: req.user._id,
+            imageUrl,
+            nutritionData: parsedNutritionData
+        });
+
+        const savedMeal = await newMeal.save();
+        console.log('Meal saved successfully:', savedMeal);
+
+        res.json({
+            success: true,
+            meal: savedMeal
+        });
+    } catch (error) {
+        console.error('Error saving meal:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to save meal',
+            details: error.message
+        });
+    }
+});
+
+// Get latest meal
+router.get('/latest', protect, async (req, res) => {
+    try {
+        const latestMeal = await Meal.findOne({ user: req.user._id })
+            .sort({ createdAt: -1 })
+            .limit(1);
+
+        if (!latestMeal) {
+            return res.status(404).json({
+                success: false,
+                message: 'No meals found'
+            });
+        }
+
+        res.json({
+            success: true,
+            meal: latestMeal
+        });
+    } catch (error) {
+        console.error('Error fetching latest meal:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch latest meal'
+        });
+    }
 });
 
 export default router;

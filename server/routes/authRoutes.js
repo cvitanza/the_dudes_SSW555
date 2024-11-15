@@ -1,13 +1,17 @@
 import express from 'express';
-import { signup, login } from '../controllers/authController.js';
+import { signup, login, deleteAccountHandler } from '../controllers/authController.js';
 import protect from '../middleware/authMiddleware.js';
 import Blacklist from '../models/blacklistModel.js';
+import { validateLogin } from '../middleware/validateLogin.js';
+import  authenticateToken from '../middleware/authenticateToken.js'
 
 const router = express.Router();
 
 // POST request for signup
 router.post('/signup', signup);
-router.post('/login', login);
+router.post('/login', validateLogin, login);
+router.delete('/delete', authenticateToken, deleteAccountHandler);
+
 // Get user profile (protected route)
 router.get('/profile', protect, (req, res) => {
     res.json({

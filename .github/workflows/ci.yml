@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: 
+      - main
+      - dev
+  pull_request:
+    branches: 
+      - main
+      - dev
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: |
+        cd client
+        npm install
+        cd ../server
+        npm install
+
+    - name: Run Frontend Tests
+      run: |
+        cd client
+        npm test -- --watchAll=false
+
+    - name: Run Backend Tests
+      run: |
+        cd server
+        npm test
+
+    - name: Check Frontend Build
+      run: |
+        cd client
+        npm run build 
