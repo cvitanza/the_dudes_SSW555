@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import uploadRoutes from './routes/uploadRoutes.js';
 import nutritionRoutes from './routes/nutritionRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import recipesRouter from './api/recipes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,8 +36,9 @@ app.use((req, res, next) => {
 app.use('/api/upload', uploadRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/recipes', recipesRouter);
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
