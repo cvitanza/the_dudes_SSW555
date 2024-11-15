@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import Recipes from '../components/Recipes';
 import RecipeDetail from '../components/RecipeDetail';
 import { RecipesContext } from '../context/RecipesContext';
+import axios from 'axios';
 
 // Mock fetch setup using environment variables
 global.fetch = jest.fn(() =>
@@ -33,6 +34,9 @@ global.fetch = jest.fn(() =>
   })
 );
 
+// Mock axios
+jest.mock('axios');
+
 describe('Recipes Component Tests', () => {
   const setRecipesMock = jest.fn();
   const mockContextValue = {
@@ -42,6 +46,7 @@ describe('Recipes Component Tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    console.error = jest.fn(); // Mock console.error
   });
 
   test('renders the search bar and button', () => {
@@ -97,23 +102,27 @@ describe('Recipes Component Tests', () => {
   });
 
   test('handles fetch error and logs an error message', async () => {
-    global.fetch.mockImplementationOnce(() => Promise.reject('API error'));
+    // Mock the error response
+    const errorMessage = 'API error';
+    axios.get.mockRejectedValueOnce(new Error(errorMessage));
 
-    console.error = jest.fn();
-
-    render(
-      <RecipesContext.Provider value={mockContextValue}>
-        <MemoryRouter>
+    const { getByPlaceholderText, getByText, getByRole } = render(
+      <MemoryRouter>
+        <RecipesContext.Provider value={mockContextValue}>
           <Recipes />
-        </MemoryRouter>
-      </RecipesContext.Provider>
+        </RecipesContext.Provider>
+      </MemoryRouter>
     );
 
-    fireEvent.change(screen.getByPlaceholderText('Search recipes...'), { target: { value: 'chicken' } });
-    fireEvent.click(screen.getByText('Search'));
+    fireEvent.change(getByPlaceholderText('Search recipes...'), {
+      target: { value: 'chicken' }
+    });
+
+    fireEvent.click(getByRole('button', { name: /search/i }));
 
     await waitFor(() => {
-      expect(console.error).toHaveBeenCalledWith('Error fetching recipes:', 'API error');
+      expect(getByText('Failed to fetch recipes. Please try again.')).toBeInTheDocument();
+      expect(console.error).toHaveBeenCalledWith('Error fetching recipes:', errorMessage);
     });
   });
 

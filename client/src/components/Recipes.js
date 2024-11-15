@@ -1,86 +1,94 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import { RecipesContext } from '../context/RecipesContext';
+import axios from 'axios';
 import './styles/Recipes.css';
 
 function Recipes() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const { recipes, setRecipes } = useContext(RecipesContext);
-  const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const { recipes, setRecipes } = useContext(RecipesContext);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  const handleSearchChange = (e) => setSearchTerm(e.target.value);
+    const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
-  const fetchRecipes = useCallback(async () => {
-    if (!searchTerm.trim()) return;
+    const handleSearch = async () => {
+        if (!searchTerm.trim()) return;
 
-    setLoading(true);
-    try {
-      const appId = process.env.REACT_APP_API_ID;
-      const appKey = process.env.REACT_APP_API_KEY;
-      const response = await fetch(
-        `https://api.edamam.com/api/recipes/v2?type=public&q=${searchTerm}&app_id=${appId}&app_key=${appKey}`
-      );
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      setRecipes(data.hits || []);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [searchTerm, setRecipes]);
+        setLoading(true);
+        setError(null);
+        
+        try {
+            const response = await axios.get(`http://localhost:${process.env.REACT_APP_PORT}/api/recipes/search`, {
+                params: { searchTerm },
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            
+            setRecipes(response.data.hits || []);
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
+            console.error('Error fetching recipes:', errorMessage);
+            setError('Failed to fetch recipes. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const handleSearch = () => {
-    fetchRecipes(); 
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      fetchRecipes();  
-    }
-  };
-
-  const renderRecipesList = () => {
-    if (loading) return <p>Loading...</p>;
-    if (!recipes.length) return <p>No recipes found.</p>;
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
 
     return (
-      <ul>
-        {recipes.map((recipeData, index) => (
-          <li key={index} className="recipes-list-item">
-            <Link
-              to={`/recipe/${encodeURIComponent(recipeData.recipe.uri)}`}
-              state={{ recipe: recipeData.recipe }}
-              className="recipes-link"
-            >
-              {recipeData.recipe.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+        <div>
+            <Header title="Explore Recipes" />
+            <div className="recipes-container">
+                <input
+                    type="text"
+                    placeholder="Search recipes..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    onKeyDown={handleKeyDown}
+                    className="recipes-input"
+                />
+                <button 
+                    onClick={handleSearch} 
+                    className="recipes-button"
+                    disabled={loading}
+                >
+                    {loading ? 'Searching...' : 'Search'}
+                </button>
+            </div>
+            
+            {error && <p className="error-message">{error}</p>}
+            
+            <div className="recipes-list">
+                {loading ? (
+                    <p>Loading...</p>
+                ) : recipes.length ? (
+                    <ul>
+                        {recipes.map((recipeData, index) => (
+                            <li key={index} className="recipes-list-item">
+                                <Link
+                                    to={`/recipe/${encodeURIComponent(recipeData.recipe.uri)}`}
+                                    state={{ recipe: recipeData.recipe }}
+                                    className="recipes-link"
+                                >
+                                    {recipeData.recipe.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No recipes found.</p>
+                )}
+            </div>
+        </div>
     );
-  };
-
-  return (
-    <div>
-      <Header title="Explore Recipes" />
-      <div className="recipes-container">
-        <input
-          type="text"
-          placeholder="Search recipes..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          onKeyDown={handleKeyDown}
-          className="recipes-input"
-        />
-        <button onClick={handleSearch} className="recipes-button">
-          Search
-        </button>
-      </div>
-      <div className="recipes-list">{renderRecipesList()}</div>
-    </div>
-  );
 }
 
 export default Recipes;
