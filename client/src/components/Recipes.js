@@ -29,7 +29,8 @@ function Recipes() {
             
             setRecipes(response.data.hits || []);
         } catch (error) {
-            console.error('Error fetching recipes:', error);
+            const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
+            console.error('Error fetching recipes:', errorMessage);
             setError('Failed to fetch recipes. Please try again.');
         } finally {
             setLoading(false);
