@@ -8,6 +8,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import nutritionRoutes from './routes/nutritionRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import recipesRouter from './api/recipes.js';
+import favoriteRoutes from './routes/favRoutes.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipesRouter);
+app.use('/api/favorites', favoriteRoutes)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

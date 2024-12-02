@@ -1,145 +1,186 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './styles/Upload.css'; // Import specific Upload CSS
-import Header from './Header';
+import { useState } from "react";
+import * as mobilenet from "@tensorflow-models/mobilenet";
+import * as tf from '@tensorflow/tfjs';
 
-function Upload({ testImageUrl, testLoading }) {
-  const [imageUrl, setImageUrl] = useState(testImageUrl || '');
-  const [loading, setLoading] = useState(testLoading || false);
+import axios from "axios";
+import "./styles/Upload.css"; // Your existing CSS
+import Header from "./Header";
+
+function Upload() {
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [nutritionData, setNutritionData] = useState({
-    calories: { value: 0, unit: 'kcal' },
-    protein: { value: 0, unit: 'g' },
-    carbohydrates: { value: 0, unit: 'g' },
-    fat: { value: 0, unit: 'g' }
-  });
-  const navigate = useNavigate();
+  const [nutritionData, setNutritionData] = useState([]);
 
-  const handleTokenExpiration = () => {
-    // Clear local storage
-    localStorage.clear();
-    // Redirect to login with a message
-    navigate('/login', { 
-      state: { 
-        message: 'Your session has expired. Please log in again.' 
-      } 
-    });
+  // Fetch nutritional data from the backend
+  const fetchNutritionData = async (foodItem) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/upload/get-nutrition",
+        { foodItem }
+      );
+
+      if (response.data.success) {
+        return response.data.foodResults; // Return nutrition data from backend
+      } else {
+        throw new Error("Failed to fetch nutrition data.");
+      }
+    } catch (error) {
+      console.error("Error fetching nutrition data:", error);
+      throw error.response?.data?.error || "An unexpected error occurred.";
+    }
   };
 
-  const uploadToBackend = async (file) => {
+  const classifyFood = async (file) => {
     try {
       setLoading(true);
       setError(null);
-
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No authentication token found');
+  
+      // Load the MobileNet model
+      const model = await mobilenet.load();
+  
+      // Read the image file as a tensor
+      const image = await readImageFile(file);
+  
+      // Classify the image
+      const predictions = await model.classify(image);
+  
+      if (predictions.length === 0) {
+        throw new Error("No recognizable food detected in the image.");
       }
+  
+      // Use the top prediction
+      const foodItem = predictions[0].className;
+  
+      console.log(`Detected food: ${foodItem}`); // Log detected food for debugging
+  
+      // Fetch nutrition data from backend
+      const nutritionResults = await fetchNutritionData(foodItem);
 
-      // Create form data with the image
-      const formData = new FormData();
-      formData.append('image', file);
-
-      try {
-        const detectResponse = await axios.post(
-          `http://localhost:${process.env.REACT_APP_PORT}/api/nutrition/detect`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${token}`
-            },
-          }
-        );
-
-        if (detectResponse.data.success && detectResponse.data.foods) {
-          const food = detectResponse.data.foods[0];
-          
-          // Create temporary URL for the uploaded image
-          const imageObjectUrl = URL.createObjectURL(file);
-          
-          // Save meal with image and nutrition data
-          const saveMealFormData = new FormData();
-          saveMealFormData.append('image', file);
-          
-          const nutritionData = {
-            calories: { value: food.calories, unit: 'kcal' },
-            protein: { value: food.protein, unit: 'g' },
-            carbohydrates: { value: food.carbs, unit: 'g' },
-            fat: { value: food.fat, unit: 'g' }
-          };
-          
-          saveMealFormData.append('nutritionData', JSON.stringify(nutritionData));
-
-          const saveMealResponse = await axios.post(
-            `http://localhost:${process.env.REACT_APP_PORT}/api/upload/save`,
-            saveMealFormData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`
-              }
-            }
-          );
-
-          if (saveMealResponse.data.success) {
-            setImageUrl(imageObjectUrl);
-            setNutritionData(nutritionData);
-            navigate('/');
-          }
-        }
-      } catch (error) {
-        if (error.response?.status === 401 && error.response?.data?.isExpired) {
-          handleTokenExpiration();
-          return;
-        }
-        throw error;
-      }
-    } catch (error) {
-      console.error('Error uploading:', error);
-      if (error.response?.status === 401) {
-        handleTokenExpiration();
-      } else {
-        setError(error.response?.data?.error || error.message || 'Failed to upload image');
-      }
+      await saveMeal(file, nutritionResults);
+  
+      setImageUrl(URL.createObjectURL(file));
+      setNutritionData(nutritionResults);
+    } catch (err) {
+      console.error("Error processing food:", err);
+      setError(err.message || "Failed to analyze the meal.");
     } finally {
       setLoading(false);
     }
   };
 
+  const saveFoodData = async () => {
+    try {
+      if (!nutritionData[0]) {
+        throw new Error('No nutrition data available to save.');
+      }
+  
+      // Prepare data to save
+      const foodItem = {
+        label: nutritionData[0].label,
+        imageUrl,
+        nutritionData: {
+          calories: {
+            value: nutritionData[0].nutrients.ENERC_KCAL,
+            unit: 'kcal',
+          },
+          protein: {
+            value: nutritionData[0].nutrients.PROCNT,
+            unit: 'g',
+          },
+          carbohydrates: {
+            value: nutritionData[0].nutrients.CHOCDF,
+            unit: 'g',
+          },
+          fat: {
+            value: nutritionData[0].nutrients.FAT,
+            unit: 'g',
+          },
+        },
+      };
+  
+      // Send data to backend
+      const response = await axios.post('http://localhost:5000/api/upload/favorites', foodItem, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Include user token
+        },
+      });
+  
+      if (response.data.success) {
+        alert('Food data saved successfully!');
+      } else {
+        throw new Error('Failed to save food data.');
+      }
+    } catch (error) {
+      console.error('Error saving food data:', error);
+      alert('Error saving food data.');
+    }
+  };
+
+  const saveMeal = async (file, nutritionData) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('nutritionData', JSON.stringify(nutritionData));
+  
+    try {
+      const response = await axios.post('http://localhost:5000/api/upload/save', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (response.data.success) {
+        console.log('Meal saved successfully:', response.data.meal);
+      } else {
+        throw new Error('Failed to save meal.');
+      }
+    } catch (error) {
+      console.error('Error saving meal:', error);
+      throw error;
+    }
+  };
+
+  const readImageFile = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.src = reader.result;
+        img.onload = () => resolve(tf.browser.fromPixels(img));
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
   const handleImageSelection = (useCamera = false) => {
-    console.log(`${useCamera ? 'Capture' : 'Upload'} button clicked`);
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    if (useCamera) input.capture = 'camera';
-    
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    if (useCamera) input.capture = "camera";
+
     input.onchange = (event) => {
       const file = event.target.files[0];
       if (file) {
-        console.log(`${useCamera ? 'Captured' : 'Uploaded'} photo:`, file);
-        uploadToBackend(file);
+        classifyFood(file);
       }
     };
+
     input.click();
   };
 
   const resetUpload = () => {
-    setImageUrl('');
+    setImageUrl("");
+    setNutritionData([]);
     setLoading(false);
   };
 
   return (
     <div className="upload-container">
       <Header title="Upload Meal" />
-      
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
-      
+
+      {error && <div className="error-message">{error}</div>}
+
       {imageUrl && (
         <button className="another-meal-button" onClick={resetUpload}>
           Upload Another Meal
@@ -148,10 +189,16 @@ function Upload({ testImageUrl, testLoading }) {
 
       {!imageUrl && !loading && (
         <div className="button-container">
-          <button className="upload-button" onClick={() => handleImageSelection(true)}>
+          <button
+            className="upload-button"
+            onClick={() => handleImageSelection(true)}
+          >
             Take a Picture
           </button>
-          <button className="upload-button" onClick={() => handleImageSelection()}>
+          <button
+            className="upload-button"
+            onClick={() => handleImageSelection()}
+          >
             Upload a Picture
           </button>
         </div>
@@ -164,30 +211,39 @@ function Upload({ testImageUrl, testLoading }) {
         </div>
       )}
 
-      {imageUrl && !loading && (
-        <div className="meal-info-box">
-          <img 
-            src={imageUrl} 
-            alt="Uploaded Meal" 
-            className="meal-image"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
-            }}
-          />
-          <div className="meal-details">
-            <h3>Nutritional Information</h3>
-            <div className="nutrition-row">
-              {Object.entries(nutritionData).map(([nutrient, data]) => (
-                <div key={nutrient} className="nutrition-item" data-testid="nutrition-item">
-                  <span className="label">{nutrient.charAt(0).toUpperCase() + nutrient.slice(1)}:</span>
-                  <span className="value">{data.value}{data.unit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+{imageUrl && !loading && (
+  <div className="meal-info-box">
+    <img src={imageUrl} alt="Uploaded Meal" className="meal-image" />
+    <div className="meal-details">
+      <h3>Detected Food Item</h3>
+      <div className="nutrition-row">
+        <div className="nutrition-item">
+          <span className="label">Label:</span>
+          <span className="value">{nutritionData[0].label || "N/A"}</span>
         </div>
-      )}
+        <div className="nutrition-item">
+          <span className="label">Calories:</span>
+          <span className="value">{nutritionData[0].nutrients.ENERC_KCAL || "N/A"} kcal</span>
+        </div>
+        <div className="nutrition-item">
+          <span className="label">Protein:</span>
+          <span className="value">{nutritionData[0].nutrients.PROCNT || "N/A"} g</span>
+        </div>
+        <div className="nutrition-item">
+          <span className="label">Carbs:</span>
+          <span className="value">{nutritionData[0].nutrients.CHOCDF || "N/A"} g</span>
+        </div>
+        <div className="nutrition-item">
+          <span className="label">Fat:</span>
+          <span className="value">{nutritionData[0].nutrients.FAT || "N/A"} g</span>
+        </div>
+      </div>
+    </div>
+    <button className="save-button" onClick={saveFoodData}>
+      Save Food Data
+    </button>
+  </div>
+)}
     </div>
   );
 }

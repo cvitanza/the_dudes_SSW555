@@ -24,12 +24,7 @@ function Home() {
   const fetchLastMeal = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`,
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
+        `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`
       );
 
       if (response.data.success && response.data.meal) {
