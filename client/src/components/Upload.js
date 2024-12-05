@@ -11,6 +11,7 @@ function Upload() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [nutritionData, setNutritionData] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // Fetch nutritional data from the backend
   const fetchNutritionData = async (foodItem) => {
@@ -69,17 +70,21 @@ function Upload() {
     }
   };
 
-  const saveFoodData = async () => {
+  const saveFoodData = async (file) => {
     try {
       if (!nutritionData[0]) {
         throw new Error('No nutrition data available to save.');
       }
   
-      // Prepare data to save
-      const foodItem = {
-        label: nutritionData[0].label,
-        imageUrl,
-        nutritionData: {
+      let form = new FormData();
+
+      
+      form.append('label', nutritionData[0].label);
+      form.append('image', file); // Use the correct key 'image' for the file
+      console.log('Nutrition Data JSON:', JSON.stringify(nutritionData));
+      form.append(
+        'nutritionData',
+        JSON.stringify({
           calories: {
             value: nutritionData[0].nutrients.ENERC_KCAL,
             unit: 'kcal',
@@ -96,13 +101,13 @@ function Upload() {
             value: nutritionData[0].nutrients.FAT,
             unit: 'g',
           },
-        },
-      };
-  
-      // Send data to backend
-      const response = await axios.post('http://localhost:5000/api/upload/favorites', foodItem, {
+        })
+      );
+    
+      const response = await axios.post('http://localhost:5000/api/upload/favorites', form, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Include user token
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
   
@@ -163,6 +168,7 @@ function Upload() {
       const file = event.target.files[0];
       if (file) {
         classifyFood(file);
+        setSelectedFile(file)
       }
     };
 
@@ -239,9 +245,9 @@ function Upload() {
         </div>
       </div>
     </div>
-    <button className="save-button" onClick={saveFoodData}>
-      Save Food Data
-    </button>
+    <button className="save-button" onClick={() => saveFoodData(selectedFile)}>
+  Save Food Data
+</button>
   </div>
 )}
     </div>
