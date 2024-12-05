@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Header from './Header';
 import './styles/Favorites.css'; // Add specific CSS for styling
 
 function Favorites() {
@@ -14,7 +15,7 @@ function Favorites() {
         setLoading(true);
         setError(null);
 
-        const response = await axios.get('http://localhost:5000/api/favorites', {
+        const response = await axios.get(`http://localhost:${process.env.REACT_APP_PORT}/api/favorites`, {
        
         });
 
@@ -36,29 +37,33 @@ function Favorites() {
 
   return (
     <div className="favorites-container">
-      <h1>Your Favorite Meals</h1>
+      <Header title="My Favorite Meals" />
 
       {loading && <p>Loading your favorites...</p>}
       {error && <p className="error-message">{error}</p>}
 
       {favorites.length > 0 ? (
-        <div className="favorites-grid">
-          {favorites.map((favorite) => (
-            <div key={favorite._id} className="favorite-item">
-              <img
-                src={favorite.imageUrl}
-                alt={favorite.label}
-                className="favorite-image"
-              />
-              <div className="favorite-details">
-                <h3>{favorite.label}</h3>
-                <p>Calories: {favorite.nutritionData.calories.value} {favorite.nutritionData.calories.unit}</p>
-                <p>Protein: {favorite.nutritionData.protein.value} {favorite.nutritionData.protein.unit}</p>
-                <p>Carbs: {favorite.nutritionData.carbohydrates.value} {favorite.nutritionData.carbohydrates.unit}</p>
-                <p>Fat: {favorite.nutritionData.fat.value} {favorite.nutritionData.fat.unit}</p>
+        <div className="favorites-content-container">
+          <div className="favorites-grid">
+            {favorites.map((favorite) => (
+              <div key={favorite._id} className="favorites-card">
+                <img
+                  src={favorite.imageUrl}
+                  alt={favorite.label}
+                  className="favorites-image"
+                />
+                <div className="favorites-details">
+                  <h3 className="favorites-title">{favorite.label}</h3>
+                  <div className="favorites-nutrition">
+                    <p>Calories: {(favorite.nutritionData.calories.value || 0).toFixed(1)} {favorite.nutritionData.calories.unit}</p>
+                    <p>Protein: {(favorite.nutritionData.protein.value || 0).toFixed(1)} {favorite.nutritionData.protein.unit}</p>
+                    <p>Carbs: {(favorite.nutritionData.carbohydrates.value || 0).toFixed(1)} {favorite.nutritionData.carbohydrates.unit}</p>
+                    <p>Fat: {(favorite.nutritionData.fat.value || 0).toFixed(1)} {favorite.nutritionData.fat.unit}</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
         !loading && <p>You have no favorite meals saved yet.</p>

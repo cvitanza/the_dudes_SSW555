@@ -1,118 +1,139 @@
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .home-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-    background-color: #c3c4c4;
-    padding: 20px;
-    margin-bottom: 60px;
-  }
-  
-  .content-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    flex-grow: 1;
-    padding: 10vh 4vw;
-    box-sizing: border-box;
-    overflow-y: auto;
-  }
-  
-  .upload-shortcut {
-    width: 100%;
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 18px;
-    color: white;
-    font-weight: 600;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    margin-bottom: 3vw;
-  }
-  
-  .upload-shortcut:hover {
-    background-color: #45a049;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-    transform: scale(1.015);
-  }
-  
-  .upload-shortcut:active {
-    background-color: #39943b;
-  }
-  
-  .info {
-    width: 100%;
-    background-color: white;
-    border: none; 
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    margin-bottom: 2vw;
-    flex-grow: 1;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .info:hover {
-    transform: scale(1.015);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  }
-  
-  .meal-image {
-    max-width: 50vw;
-    max-height: 50vh;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  .nutrition-info {
-    text-align: left;
-    margin-top: 15px;
-    padding: 0 4vw;
-  }
-  
-  .nutrition-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 5px;
-  }
-  
-  .nutrition-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-  }
-  
-  .label {
-    font-weight: bold;
-    color: #666;
-  }
-  
-  .value {
-    color: #333;
-  }
-  
-  h2 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    color: #222;
-  }
-  
-  span, p {
-    font-size: 16px;
-    color: #555;
-  }
+  font-family: 'Inter', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #c3c4c4;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  padding: 10vh 4vw;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.upload-shortcut {
+  width: 100%;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 18px;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  margin-bottom: 3vh;
+}
+
+.upload-shortcut:hover {
+  background-color: #45a049;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: scale(1.015);
+}
+
+.upload-shortcut:active {
+  background-color: #39943b;
+}
+
+.home-meal-info-box {
+  width: 100%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 72vh;
+}
+
+.meal-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.home-meal-image {
+  max-width: 90%;
+  max-height: 70%;
+  height: auto;
+  width: auto;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.home-meal-details {
+  width: 85%;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nutrition-info {
+  text-align: left;
+  width: 100%;
+}
+
+.nutrition-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.nutrition-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.label {
+  font-weight: bold;
+  color: #666;
+}
+
+.value {
+  color: #333;
+}
+
+.upload-date {
+  text-align: right;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 10px;
+}
+
+.loading, .error, .no-meal {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.no-meal {
+  color: #666;
+}

@@ -223,19 +223,19 @@ function Upload() {
         </div>
         <div className="nutrition-item">
           <span className="label">Calories:</span>
-          <span className="value">{nutritionData[0].nutrients.ENERC_KCAL || "N/A"} kcal</span>
+          <span className="value">{(nutritionData[0].nutrients.ENERC_KCAL || 0).toFixed(1)} kcal</span>
         </div>
         <div className="nutrition-item">
           <span className="label">Protein:</span>
-          <span className="value">{nutritionData[0].nutrients.PROCNT || "N/A"} g</span>
+          <span className="value">{(nutritionData[0].nutrients.PROCNT || 0).toFixed(1)} g</span>
         </div>
         <div className="nutrition-item">
           <span className="label">Carbs:</span>
-          <span className="value">{nutritionData[0].nutrients.CHOCDF || "N/A"} g</span>
+          <span className="value">{(nutritionData[0].nutrients.CHOCDF || 0).toFixed(1)} g</span>
         </div>
         <div className="nutrition-item">
           <span className="label">Fat:</span>
-          <span className="value">{nutritionData[0].nutrients.FAT || "N/A"} g</span>
+          <span className="value">{(nutritionData[0].nutrients.FAT || 0).toFixed(1)} g</span>
         </div>
       </div>
     </div>

@@ -84,21 +84,21 @@ function Home() {
             <div className="nutrition-row">
               <div className="nutrition-item">
                 <span className="label">Calories:</span>
-                <span className="value">{lastMeal.nutritionInfo?.calories || 0} kcal</span>
+                <span className="value">{(lastMeal.nutritionInfo?.calories || 0).toFixed(1)} kcal</span>
               </div>
               <div className="nutrition-item">
                 <span className="label">Protein:</span>
-                <span className="value">{lastMeal.nutritionInfo?.protein || 0}g</span>
+                <span className="value">{(lastMeal.nutritionInfo?.protein || 0).toFixed(1)} g</span>
               </div>
             </div>
             <div className="nutrition-row">
               <div className="nutrition-item">
                 <span className="label">Carbs:</span>
-                <span className="value">{lastMeal.nutritionInfo?.carbs || 0}g</span>
+                <span className="value">{(lastMeal.nutritionInfo?.carbs || 0).toFixed(1)} g</span>
               </div>
               <div className="nutrition-item">
                 <span className="label">Fat:</span>
-                <span className="value">{lastMeal.nutritionInfo?.fat || 0}g</span>
+                <span className="value">{(lastMeal.nutritionInfo?.fat || 0).toFixed(1)} g</span>
               </div>
             </div>
           </div>

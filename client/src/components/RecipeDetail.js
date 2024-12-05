@@ -77,10 +77,10 @@ function RecipeDetail() {
 
           <div className="nutrition-section">
             <h2>Nutritional Information</h2>
-            <p><strong>Calories:</strong> {formatNutrient(recipe.totalNutrients?.ENERC_KCAL, 0)} kcal</p>
-            <p><strong>Protein:</strong> {formatNutrient(recipe.totalNutrients?.PROCNT)} g</p>
-            <p><strong>Fat:</strong> {formatNutrient(recipe.totalNutrients?.FAT)} g</p>
-            <p><strong>Carbohydrates:</strong> {formatNutrient(recipe.totalNutrients?.CHOCDF)} g</p>
+            <p><strong>Calories:</strong> {formatNutrient(recipe.totalNutrients?.ENERC_KCAL, 1)} kcal</p>
+            <p><strong>Protein:</strong> {formatNutrient(recipe.totalNutrients?.PROCNT, 1)} g</p>
+            <p><strong>Fat:</strong> {formatNutrient(recipe.totalNutrients?.FAT, 1)} g</p>
+            <p><strong>Carbohydrates:</strong> {formatNutrient(recipe.totalNutrients?.CHOCDF, 1)} g</p>
           </div>
 
           <div className="health-labels-section">

@@ -43,6 +43,30 @@ function Recipes() {
         }
     };
 
+    const handleFavorite = async (recipe) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No authentication token found');
+            return;
+        }
+
+        const userEmail = JSON.parse(atob(token.split('.')[1])).email; // Decode the token to get the email
+
+        try {
+            const response = await axios.post(`http://localhost:${process.env.REACT_APP_PORT}/api/favorites`, {
+                recipe,
+                userEmail // Include userEmail in the request
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log('Recipe favorited:', response.data);
+        } catch (error) {
+            console.error('Error favoriting recipe:', error);
+        }
+    };
+
     return (
         <div>
             <Header title="Explore Recipes" />
@@ -55,11 +79,7 @@ function Recipes() {
                     onKeyDown={handleKeyDown}
                     className="recipes-input"
                 />
-                <button 
-                    onClick={handleSearch} 
-                    className="recipes-button"
-                    disabled={loading}
-                >
+                <button onClick={handleSearch} className="recipes-button" disabled={loading}>
                     {loading ? 'Searching...' : 'Search'}
                 </button>
             </div>
@@ -80,6 +100,9 @@ function Recipes() {
                                 >
                                     {recipeData.recipe.label}
                                 </Link>
+                                <button onClick={() => handleFavorite(recipeData.recipe)} className="favorite-button">
+                                    ★
+                                </button>
                             </li>
                         ))}
                     </ul>
