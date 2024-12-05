@@ -189,26 +189,31 @@ router.post("/get-nutrition", async (req, res) => {
 });
 
 router.post('/favorites', protect, async (req, res) => {
-    try {
-      const { label, imageUrl, nutritionData } = req.body;
-  
-      if (!label || !imageUrl || !nutritionData) {
-        return res.status(400).json({ success: false, message: 'Missing required fields.' });
-      }
-  
-      const newFoodItem = new FoodItem({
-        user: req.user._id,
-        label,
-        imageUrl,
-        nutritionData,
-      });
-  
-      const savedFoodItem = await newFoodItem.save();
-      res.status(201).json({ success: true, data: savedFoodItem });
-    } catch (error) {
-      console.error('Error saving food item:', error);
-      res.status(500).json({ success: false, message: 'Failed to save food item.' });
+  try {
+    const { label, imageUrl, nutritionData, ingredients, cuisineType, mealType, url, healthLabels } = req.body;
+
+    if (!label || !imageUrl || !nutritionData || !ingredients || !cuisineType || !mealType || !url) {
+      return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
-  });
+
+    const newFoodItem = new FoodItem({
+      user: req.user._id,
+      label,
+      imageUrl,
+      nutritionData,
+      ingredients,
+      cuisineType,
+      mealType,
+      url,
+      healthLabels,
+    });
+
+    const savedFoodItem = await newFoodItem.save();
+    res.status(201).json({ success: true, data: savedFoodItem });
+  } catch (error) {
+    console.error('Error saving food item:', error);
+    res.status(500).json({ success: false, message: 'Failed to save food item.' });
+  }
+});
 
 export default router;
