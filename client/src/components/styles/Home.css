@@ -1,3 +1,4 @@
+/* General Body Styles */
 body {
   font-family: 'Inter', sans-serif;
   background-color: #f9f9f9;
@@ -5,39 +6,44 @@ body {
   padding: 0;
 }
 
+/* Home Container */
 .home-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh; /* Allows scrolling */
   background-color: #c3c4c4;
 }
 
+/* Content Container */
 .content-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  flex-grow: 1;
-  padding: 10vh 4vw;
+  justify-content: flex-start; /* Ensures content starts from the top */
+  padding: 20px;
+  gap: 20px; /* Adds space between the button and other content */
   box-sizing: border-box;
-  overflow-y: auto;
+  flex: 1;
+  overflow-y: auto; /* Ensures content is scrollable */
+  width: 100%; /* Full width for inner content */
 }
 
+/* Upload Shortcut Button */
 .upload-shortcut {
-  width: 100%;
+  width: 100%; /* Full width of the parent container */
+  max-width: 800px; /* Constrain the button on larger screens */
+  margin: 60px auto; /* Space above and below the button, centered */
   background-color: #4CAF50;
   border: none;
   border-radius: 8px;
-  padding: 10px;
+  padding: 15px; /* Increased padding for better visibility */
   font-size: 18px;
   color: white;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-  margin-bottom: 3vh;
 }
 
 .upload-shortcut:hover {
@@ -50,82 +56,105 @@ body {
   background-color: #39943b;
 }
 
+/* Meal Info Box */
 .home-meal-info-box {
   width: 100%;
+  max-width: 800px; /* Constrain the content for large screens */
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  margin: 20px auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 72vh;
 }
 
+/* Meal Title */
 .meal-title {
   font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #222;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
+/* Meal Content: Combines Image and Details */
+.meal-content {
+  display: flex;
+  flex-direction: column; /* Stack image and details for mobile */
+  align-items: center;
+  gap: 20px; /* Add spacing between image and details */
+  width: 100%; /* Full width for proper alignment */
+}
+
+@media (min-width: 768px) {
+  .meal-content {
+    flex-direction: row; /* Place image and details side by side for desktop */
+    justify-content: space-between;
+  }
+}
+
+/* Meal Image */
 .home-meal-image {
-  max-width: 90%;
-  max-height: 70%;
+  max-width: 300px;
+  width: 100%; /* Ensure the image adapts to the container */
   height: auto;
-  width: auto;
   border-radius: 8px;
-  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.home-meal-details {
-  width: 85%;
-  padding: 10px;
+/* Meal Details */
+.meal-details {
+  flex: 1; /* Allow details to expand */
+  padding: 20px; /* Add spacing inside the details box */
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Full width to align with the image */
 }
 
+/* Nutrition Information */
 .nutrition-info {
-  text-align: left;
   width: 100%;
 }
 
 .nutrition-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
 }
 
 .nutrition-item {
   display: flex;
   justify-content: space-between;
-  padding: 5px 0;
+  width: 48%; /* Ensure two items per row */
 }
 
 .label {
   font-weight: bold;
-  color: #666;
+  color: #555;
 }
 
 .value {
-  color: #333;
+  color: #222;
 }
 
+/* Upload Date */
 .upload-date {
-  text-align: right;
-  font-size: 0.9em;
-  color: #666;
   margin-top: 10px;
+  text-align: right;
+  font-size: 14px;
+  color: #666;
 }
 
+/* Loading, Error, and No Meal States */
 .loading, .error, .no-meal {
   text-align: center;
   padding: 20px;
-  margin: 20px 0;
   border-radius: 8px;
   background-color: white;
+  width: 100%;
+  max-width: 800px;
 }
 
 .error {

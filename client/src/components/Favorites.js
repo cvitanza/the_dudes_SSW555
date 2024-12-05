@@ -14,7 +14,7 @@ function Favorites() {
             try {
                 setLoading(true);
                 setError(null);
-
+              
                 const response = await axios.get(`http://localhost:${process.env.REACT_APP_PORT}/api/favorites`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -36,6 +36,7 @@ function Favorites() {
                         }
                         return acc;
                     }, []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
 
                     setFavorites(uniqueFavorites);
                 } else {
