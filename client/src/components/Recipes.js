@@ -43,30 +43,6 @@ function Recipes() {
         }
     };
 
-    const handleFavorite = async (recipe) => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('No authentication token found');
-            return;
-        }
-
-        const userEmail = JSON.parse(atob(token.split('.')[1])).email; // Decode the token to get the email
-
-        try {
-            const response = await axios.post(`http://localhost:${process.env.REACT_APP_PORT}/api/favorites`, {
-                recipe,
-                userEmail // Include userEmail in the request
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            console.log('Recipe favorited:', response.data);
-        } catch (error) {
-            console.error('Error favoriting recipe:', error);
-        }
-    };
-
     return (
         <div>
             <Header title="Explore Recipes" />
@@ -95,14 +71,34 @@ function Recipes() {
                             <li key={index} className="recipes-list-item">
                                 <Link
                                     to={`/recipe/${encodeURIComponent(recipeData.recipe.uri)}`}
-                                    state={{ recipe: recipeData.recipe }}
+                                    state={{ 
+                                        recipe: { 
+                                            ...recipeData.recipe, 
+                                            imageUrl: recipeData.recipe.image,
+                                            nutritionData: {
+                                                calories: {
+                                                    value: recipeData.recipe.totalNutrients?.ENERC_KCAL?.quantity || 0,
+                                                    unit: 'kcal',
+                                                },
+                                                protein: {
+                                                    value: recipeData.recipe.totalNutrients?.PROCNT?.quantity || 0,
+                                                    unit: 'g',
+                                                },
+                                                carbohydrates: {
+                                                    value: recipeData.recipe.totalNutrients?.CHOCDF?.quantity || 0,
+                                                    unit: 'g',
+                                                },
+                                                fat: {
+                                                    value: recipeData.recipe.totalNutrients?.FAT?.quantity || 0,
+                                                    unit: 'g',
+                                                },
+                                            },
+                                        }
+                                    }}
                                     className="recipes-link"
                                 >
                                     {recipeData.recipe.label}
                                 </Link>
-                                <button onClick={() => handleFavorite(recipeData.recipe)} className="favorite-button">
-                                    ★
-                                </button>
                             </li>
                         ))}
                     </ul>
