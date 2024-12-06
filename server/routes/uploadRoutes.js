@@ -8,8 +8,15 @@ import { fileURLToPath } from "url";
 import fs from "fs";
 import axios from "axios";
 import dotenv from "dotenv";
+import cloudinary from "cloudinary"
 
 dotenv.config(); // Load environment variables
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,6 +99,7 @@ router.post("/save", protect, upload.single("image"), async (req, res) => {
       nutritionData: reformattedData,
     });
 
+    console.log(req.file)
     const savedMeal = await newMeal.save();
 
     res.json({
@@ -188,19 +196,48 @@ router.post("/get-nutrition", async (req, res) => {
   }
 });
 
-router.post('/favorites', protect, async (req, res) => {
+router.post('/favorites', protect, upload.single("image"),  async (req, res) => {
   try {
-    const { label, imageUrl, nutritionData, ingredients, cuisineType, mealType, url, healthLabels } = req.body;
+    const { label, nutritionData, ingredients, cuisineType, mealType, url, healthLabels } = req.body;
 
     if (!label || !imageUrl || !nutritionData || !ingredients || !cuisineType || !mealType || !url) {
       return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
+      const imageUrl = `/uploads/${req.file.filename}`;
+      
+      const uploadedImage = await cloudinary.uploader.upload(req.file.path);
 
+      const parsedNutritionData =
+      typeof nutritionData === "string"
+        ? JSON.parse(nutritionData)
+        : nutritionData;
+    console.log(parsedNutritionData)
+
+    // Format the data to include only the relevant fields
+    const reformattedData = {
+        calories: {
+          value: parseFloat(parsedNutritionData.calories?.value || 0), // Default to 0 if undefined
+          unit: parsedNutritionData.calories?.unit || 'kcal',          // Default unit
+        },
+        protein: {
+          value: parseFloat(parsedNutritionData.protein?.value || 0),
+          unit: parsedNutritionData.protein?.unit || 'g',
+        },
+        carbohydrates: {
+          value: parseFloat(parsedNutritionData.carbohydrates?.value || 0),
+          unit: parsedNutritionData.carbohydrates?.unit || 'g',
+        },
+        fat: {
+          value: parseFloat(parsedNutritionData.fat?.value || 0),
+          unit: parsedNutritionData.fat?.unit || 'g',
+        },
+      };
+  
     const newFoodItem = new FoodItem({
       user: req.user._id,
       label,
-      imageUrl,
-      nutritionData,
+      imageUrl: uploadedImage.secure_url,
+      nutritionData: reformattedData,
       ingredients,
       cuisineType,
       mealType,
