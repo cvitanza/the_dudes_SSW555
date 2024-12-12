@@ -8,7 +8,7 @@ function RecipeDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   const { recipe } = location.state || {};
-  const { setFavorites } = useContext(RecipesContext);
+  const { setFavorites } = useContext(RecipesContext) || {};
 
   console.log('Recipe data:', recipe);
   console.log('Image URL:', recipe?.imageUrl);

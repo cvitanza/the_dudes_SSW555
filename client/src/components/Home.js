@@ -29,7 +29,7 @@ function Home() {
         `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`
       );
 
-      if (response.data.success && response.data.meal) {
+      if (response?.data?.success && response?.data?.meal) {
         setLastMeal({
           ...response.data.meal,
           imageUrl: `http://localhost:${process.env.REACT_APP_PORT}${response.data.meal.imageUrl}`,
