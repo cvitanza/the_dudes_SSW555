@@ -55,11 +55,7 @@ function Recipes() {
                     onKeyDown={handleKeyDown}
                     className="recipes-input"
                 />
-                <button 
-                    onClick={handleSearch} 
-                    className="recipes-button"
-                    disabled={loading}
-                >
+                <button onClick={handleSearch} className="recipes-button" disabled={loading}>
                     {loading ? 'Searching...' : 'Search'}
                 </button>
             </div>
@@ -75,7 +71,30 @@ function Recipes() {
                             <li key={index} className="recipes-list-item">
                                 <Link
                                     to={`/recipe/${encodeURIComponent(recipeData.recipe.uri)}`}
-                                    state={{ recipe: recipeData.recipe }}
+                                    state={{ 
+                                        recipe: { 
+                                            ...recipeData.recipe, 
+                                            imageUrl: recipeData.recipe.image,
+                                            nutritionData: {
+                                                calories: {
+                                                    value: recipeData.recipe.totalNutrients?.ENERC_KCAL?.quantity || 0,
+                                                    unit: 'kcal',
+                                                },
+                                                protein: {
+                                                    value: recipeData.recipe.totalNutrients?.PROCNT?.quantity || 0,
+                                                    unit: 'g',
+                                                },
+                                                carbohydrates: {
+                                                    value: recipeData.recipe.totalNutrients?.CHOCDF?.quantity || 0,
+                                                    unit: 'g',
+                                                },
+                                                fat: {
+                                                    value: recipeData.recipe.totalNutrients?.FAT?.quantity || 0,
+                                                    unit: 'g',
+                                                },
+                                            },
+                                        }
+                                    }}
                                     className="recipes-link"
                                 >
                                     {recipeData.recipe.label}

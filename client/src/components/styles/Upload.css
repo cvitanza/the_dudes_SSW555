@@ -83,41 +83,42 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Meal Info Container */
 .meal-info-box {
-  background-color: white;
-  border-radius: 10px;
-  padding: 0 4vw;
-  padding-top: 2vh;
-  margin: 2vh 4vw;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  height: 72vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background-color: #ffffff; /* White background for better contrast */
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 600px; /* Limits width for better readability */
+  text-align: center; /* Center-align content */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .meal-info-box:hover {
-  transform: scale(1.015);
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
 }
 
+/* Meal Image */
 .meal-image {
-  max-width: 90%;
-  max-height: 70%;
+  width: 100%;
+  max-width: 400px;
   height: auto;
-  width: auto;
   border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Meal Title */
+.meal-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333; /* Darker text for readability */
   margin-bottom: 15px;
 }
 
-.meal-details {
-  width: 85%;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
+/* Nutrition Row */
 .nutrition-row {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -125,19 +126,39 @@
   margin-top: 10px;
 }
 
+/* Nutrition Item */
 .nutrition-item {
+  background-color: #f9f9f9; /* Light gray background for contrast */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
-  padding: 5px 0;
+  align-items: center;
+  font-size: 0.95rem; /* Slightly smaller text for compact layout */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Minimal shadow for depth */
 }
 
+/* Label and Value Styling */
 .label {
-  font-weight: bold;
-  color: #666;
+  font-weight: 600; /* Semi-bold for emphasis */
+  color: #555; /* Dark gray for better contrast */
 }
 
 .value {
-  color: #333;
+  font-weight: bold;
+  color: #007bff; /* Blue to stand out */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .nutrition-row {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+
+  .meal-info-box {
+    padding: 15px;
+  }
 }
 
 .error-message {
@@ -147,4 +168,24 @@
   margin: 10px 4vw;
   border-radius: 4px;
   text-align: center;
+}
+
+.save-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+.save-button:active {
+  background-color: #3e8e41;
 }

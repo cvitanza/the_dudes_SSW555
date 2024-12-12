@@ -10,53 +10,46 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Check user authentication
   const checkAuth = useCallback(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/login');
     }
-  }, [navigate]); 
+  }, [navigate]);
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]); 
+  }, [checkAuth]);
 
+  // Fetch last meal from the server
   const fetchLastMeal = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`,
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
+        `http://localhost:${process.env.REACT_APP_PORT}/api/upload/latest`
       );
 
-      if (response.data.success && response.data.meal) {
+      if (response?.data?.success && response?.data?.meal) {
         setLastMeal({
           ...response.data.meal,
           imageUrl: `http://localhost:${process.env.REACT_APP_PORT}${response.data.meal.imageUrl}`,
-          nutritionInfo: {
-            calories: response.data.meal.nutritionData.calories.value,
-            protein: response.data.meal.nutritionData.protein.value,
-            carbs: response.data.meal.nutritionData.carbohydrates.value,
-            fat: response.data.meal.nutritionData.fat.value
-          },
-          uploadDate: response.data.meal.createdAt
+          nutritionInfo: response.data.meal.nutritionData,
+          uploadDate: response.data.meal.createdAt,
         });
       }
     } catch (error) {
       console.error('Error fetching last meal:', error);
-      setError('Failed to fetch last meal');
+      setError('Failed to fetch last meal.');
     } finally {
       setLoading(false);
     }
-  }, []); 
+  }, []);
 
   useEffect(() => {
     fetchLastMeal();
-  }, [fetchLastMeal]); 
+  }, [fetchLastMeal]);
 
+  // Render last meal section
   const renderLastMeal = () => {
     if (loading) {
       return <div className="loading">Loading...</div>;
@@ -70,48 +63,63 @@ function Home() {
       return <div className="no-meal">No meals uploaded yet</div>;
     }
 
+    const { imageUrl, nutritionInfo, uploadDate } = lastMeal;
+
     return (
       <div className="home-meal-info-box">
         <h2 className="meal-title">My Last Meal</h2>
-        <div className="image-container">
-          <img 
-            src={lastMeal.imageUrl} 
-            alt="Last Meal" 
+        <div className="meal-content">
+          <img
+            src={imageUrl}
+            alt="Last Meal"
             className="home-meal-image"
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
             }}
           />
-        </div>
-        <div className="home-meal-details">
-          <div className="nutrition-info">
-            <div className="nutrition-row">
-              <div className="nutrition-item">
-                <span className="label">Calories:</span>
-                <span className="value">{lastMeal.nutritionInfo?.calories || 0} kcal</span>
+          <div className="meal-details">
+            <h3>Nutrition Information</h3>
+            <div className="nutrition-info">
+              <div className="nutrition-row">
+                <div className="nutrition-item">
+                  <span className="label">Calories:</span>
+                  <span className="value">
+                    {(nutritionInfo?.calories?.value || 0).toFixed(1)}{' '}
+                    {nutritionInfo?.calories?.unit || 'kcal'}
+                  </span>
+                </div>
+                <div className="nutrition-item">
+                  <span className="label">Protein:</span>
+                  <span className="value">
+                    {(nutritionInfo?.protein?.value || 0).toFixed(1)}{' '}
+                    {nutritionInfo?.protein?.unit || 'g'}
+                  </span>
+                </div>
               </div>
-              <div className="nutrition-item">
-                <span className="label">Protein:</span>
-                <span className="value">{lastMeal.nutritionInfo?.protein || 0}g</span>
+              <div className="nutrition-row">
+                <div className="nutrition-item">
+                  <span className="label">Carbs:</span>
+                  <span className="value">
+                    {(nutritionInfo?.carbohydrates?.value || 0).toFixed(1)}{' '}
+                    {nutritionInfo?.carbohydrates?.unit || 'g'}
+                  </span>
+                </div>
+                <div className="nutrition-item">
+                  <span className="label">Fat:</span>
+                  <span className="value">
+                    {(nutritionInfo?.fat?.value || 0).toFixed(1)}{' '}
+                    {nutritionInfo?.fat?.unit || 'g'}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="nutrition-row">
-              <div className="nutrition-item">
-                <span className="label">Carbs:</span>
-                <span className="value">{lastMeal.nutritionInfo?.carbs || 0}g</span>
+            {uploadDate && (
+              <div className="upload-date">
+                Uploaded: {new Date(uploadDate).toLocaleDateString()}
               </div>
-              <div className="nutrition-item">
-                <span className="label">Fat:</span>
-                <span className="value">{lastMeal.nutritionInfo?.fat || 0}g</span>
-              </div>
-            </div>
+            )}
           </div>
-          {lastMeal.uploadDate && (
-            <div className="upload-date">
-              Uploaded: {new Date(lastMeal.uploadDate).toLocaleDateString()}
-            </div>
-          )}
         </div>
       </div>
     );
@@ -121,9 +129,10 @@ function Home() {
     <div className="home-container">
       <Header title="My Home" />
       <div className="content-container">
-        <button 
-          className="upload-shortcut" 
-          onClick={() => navigate('/upload')}>
+        <button
+          className="upload-shortcut"
+          onClick={() => navigate('/upload')}
+        >
           Upload My Meal
         </button>
         {renderLastMeal()}
